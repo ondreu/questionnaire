@@ -409,7 +409,7 @@ async function generatePDF() {
 
         const t = (key) => getNestedTranslation(translations[currentLanguage], key) || key;
         const getVal = (name) => {
-            const el = document.querySelector(\`[name="\${name}"]\`);
+            const el = document.querySelector(`[name="${name}"]`);
             return el ? (el.type === 'checkbox' ? (el.checked ? '✓' : '') : el.value || '') : '';
         };
 
@@ -427,7 +427,7 @@ async function generatePDF() {
                 if (yPos > pageHeight - 20) { doc.addPage(); yPos = 20; }
                 if (f.value && f.value.trim()) {
                     const label = f.label.endsWith(':') ? f.label.slice(0, -1) : f.label;
-                    doc.text(doc.splitTextToSize(\`\${label}: \${f.value}\`, contentWidth), margin, yPos);
+                    doc.text(doc.splitTextToSize(`${label}: ${f.value}`, contentWidth), margin, yPos);
                     yPos += 7;
                 }
             });
@@ -442,7 +442,7 @@ async function generatePDF() {
 
         addSec(t('section1.title'), [
             { label: t('section1.ipRating'), value: getVal('ipRatingOther') },
-            { label: t('section1.temperature'), value: \`\${getVal('tempMin')} - \${getVal('tempMax')}\` }
+            { label: t('section1.temperature'), value: `${getVal('tempMin')} - ${getVal('tempMax')}` }
         ]);
 
         addSec(t('section9.title'), [
@@ -454,10 +454,10 @@ async function generatePDF() {
             doc.setPage(i);
             doc.setFontSize(8);
             doc.setTextColor(100);
-            doc.text(\`\${config.EMAIL || 'sales@schaltag.cz'} | Page \${i}/\${totalPages}\`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+            doc.text(`${config.EMAIL || 'sales@schaltag.cz'} | Page ${i}/${totalPages}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
         }
 
-        doc.save(\`Questionnaire_\${getVal('customer') || 'Form'}_\${new Date().toISOString().split('T')[0]}.pdf\`);
+        doc.save(`Questionnaire_${getVal('customer') || 'Form'}_${new Date().toISOString().split('T')[0]}.pdf`);
         setTimeout(() => {
             document.getElementById('loadingOverlay').classList.remove('active');
             document.getElementById('successModal').classList.add('active');
