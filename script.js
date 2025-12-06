@@ -381,7 +381,16 @@ async function generatePDF() {
     document.getElementById('loadingOverlay').classList.add('active');
 
     try {
-        const t = (key) => getNestedTranslation(translations[currentLanguage], key) || key;
+        // Bilingual translation helper: shows current language + Czech
+        const t = (key) => {
+            const currentTrans = getNestedTranslation(translations[currentLanguage], key) || key;
+            if (currentLanguage === 'cz') {
+                return currentTrans; // If already Czech, show only Czech
+            }
+            const czechTrans = getNestedTranslation(translations['cz'], key) || '';
+            return czechTrans ? `${currentTrans} / ${czechTrans}` : currentTrans;
+        };
+
         const getVal = (name) => {
             const el = document.querySelector(`[name="${name}"]`);
             if (!el) return '';
@@ -444,17 +453,17 @@ async function generatePDF() {
     <style>
         @page { margin: 2cm; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.4; color: #333; }
+        body { font-family: Arial, sans-serif; font-size: 10pt; line-height: 1.4; color: #333; }
         .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #d20f39; }
         .logo { max-width: 150px; margin-bottom: 10px; }
-        h1 { color: #d20f39; font-size: 20pt; margin-bottom: 10px; }
-        h2 { color: #d20f39; font-size: 14pt; margin: 25px 0 15px 0; padding-bottom: 5px; border-bottom: 2px solid #d20f39; }
-        .field { margin: 8px 0; display: flex; }
-        .field-label { font-weight: bold; min-width: 200px; }
+        h1 { color: #d20f39; font-size: 18pt; margin-bottom: 10px; }
+        h2 { color: #d20f39; font-size: 12pt; margin: 20px 0 12px 0; padding-bottom: 5px; border-bottom: 2px solid #d20f39; }
+        .field { margin: 6px 0; display: flex; }
+        .field-label { font-weight: bold; min-width: 250px; font-size: 9pt; }
         .field-value { flex: 1; }
-        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-        th, td { border: 1px solid #666; padding: 8px; text-align: left; }
-        th { background: #d20f39; color: white; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 9pt; }
+        th, td { border: 1px solid #666; padding: 6px; text-align: left; }
+        th { background: #d20f39; color: white; font-weight: bold; font-size: 8pt; }
         tr:nth-child(even) { background: #f5f5f5; }
         .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #999; font-size: 9pt; text-align: center; color: #666; }
         .page-break { page-break-after: always; }
