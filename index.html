@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Questionnaire - Schaltag</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="logo.png" alt="Schaltag Logo" id="logo">
+            </div>
+            <div class="header-controls">
+                <div class="language-selector">
+                    <button class="lang-btn" data-lang="de">DE</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="cz">CZ</button>
+                    <button class="lang-btn" data-lang="fr">FR</button>
+                </div>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                    <span class="theme-icon">🌓</span>
+                </button>
+            </div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-label" data-i18n="progressLabel">Progress:</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-percent" id="progress-percent">0%</div>
+        </div>
+    </header>
+
+    <!-- Main Form -->
+    <main>
+        <div class="container">
+            <h1 data-i18n="pageTitle">Engineering Questionnaire</h1>
+
+            <form id="questionnaire-form">
+                <!-- Header Section - Identification -->
+                <section class="form-section">
+                    <h2 data-i18n="header.title">IDENTIFICATION</h2>
+                    <div class="form-group">
+                        <label data-i18n="header.customer">Customer (company):</label>
+                        <input type="text" name="customer" data-section="header">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="header.technicalContact">Technical contact person:</label>
+                        <input type="text" name="technicalContact" data-section="header">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="header.businessContact">Business contact person:</label>
+                        <input type="text" name="businessContact" data-section="header">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="header.emailPhone">E-mail / Phone:</label>
+                        <input type="text" name="emailPhone" data-section="header">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="header.date">Date:</label>
+                        <input type="date" name="date" data-section="header">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="header.projectName">Project / machine name:</label>
+                        <input type="text" name="projectName" data-section="header">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="header.projectCode">Project code:</label>
+                        <input type="text" name="projectCode" data-section="header">
+                    </div>
+                </section>
+
+                <!-- Section 1: Environment and Operating Conditions -->
+                <section class="form-section">
+                    <h2 data-i18n="section1.title">1. ENVIRONMENT AND OPERATING CONDITIONS</h2>
+
+                    <h3 data-i18n="section1.subtitle1">1.1 Protection and Environment</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section1.ipRating">Required IP rating:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="ipRatingNone" data-section="section1"> <span data-i18n="section1.ipRatingNone">No requirement (standard)</span></label>
+                            <label><input type="text" name="ipRatingOther" placeholder="IP___" data-section="section1"></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section1.pollution">Environmental pollution:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="pollutionClean" data-section="section1"> <span data-i18n="section1.pollutionClean">Clean environment (offices, laboratories)</span></label>
+                            <label><input type="checkbox" name="pollutionLight" data-section="section1"> <span data-i18n="section1.pollutionLight">Light pollution (normal operation)</span></label>
+                            <label><input type="checkbox" name="pollutionMedium" data-section="section1"> <span data-i18n="section1.pollutionMedium">Medium pollution (wood processing, textile)</span></label>
+                            <label><input type="checkbox" name="pollutionHigh" data-section="section1"> <span data-i18n="section1.pollutionHigh">High pollution (sawmill, grinders, dust)</span></label>
+                            <label><span data-i18n="section1.pollutionOther">Other:</span> <input type="text" name="pollutionOther" data-section="section1"></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section1.aggressive">Aggressive substances:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="aggressiveNo" data-section="section1"> <span data-i18n="section1.aggressiveNo">No</span></label>
+                            <label><input type="checkbox" name="aggressiveCorrosive" data-section="section1"> <span data-i18n="section1.aggressiveCorrosive">Yes - corrosive</span></label>
+                            <label><input type="checkbox" name="aggressiveOil" data-section="section1"> <span data-i18n="section1.aggressiveOil">Yes - oils/lubricants</span></label>
+                            <label><input type="checkbox" name="aggressiveMoisture" data-section="section1"> <span data-i18n="section1.aggressiveMoisture">Yes - moisture/condensation</span></label>
+                            <label><span data-i18n="section1.aggressiveOther">Other:</span> <input type="text" name="aggressiveOther" data-section="section1"></label>
+                        </div>
+                    </div>
+
+                    <h3 data-i18n="section1.subtitle2">1.2 Temperature and Altitude</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section1.temperature">Ambient temperature:</label>
+                        <div class="input-row">
+                            <input type="text" name="tempMin" placeholder="Min: ___ °C" data-section="section1">
+                            <input type="text" name="tempMax" placeholder="Max: ___ °C" data-section="section1">
+                        </div>
+                        <label><input type="checkbox" name="tempStandard" data-section="section1"> <span data-i18n="section1.tempStandard">No requirement - Standard (-5°C to +40°C)</span></label>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section1.altitude">Altitude:</label>
+                        <input type="text" name="altitudeValue" placeholder="___ m a.s.l." data-section="section1">
+                        <label><input type="checkbox" name="altitudeStandard" data-section="section1"> <span data-i18n="section1.altitudeStandard">No requirement - Standard (< 2000 m a.s.l.)</span></label>
+                    </div>
+                </section>
+
+                <!-- Section 2: Power Supply -->
+                <section class="form-section">
+                    <h2 data-i18n="section2.title">2. POWER SUPPLY</h2>
+
+                    <h3 data-i18n="section2.subtitle1">2.1 Source</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section2.voltage">Voltage and frequency:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="voltage230" data-section="section2"> <span data-i18n="section2.voltage230">1x 230 V AC / 50 Hz</span></label>
+                            <label><input type="checkbox" name="voltage400" data-section="section2"> <span data-i18n="section2.voltage400">3x 400 V AC / 50 Hz</span></label>
+                            <label><input type="checkbox" name="voltage480" data-section="section2"> <span data-i18n="section2.voltage480">3x 480 V AC / 60 Hz (USA)</span></label>
+                            <label><span data-i18n="section2.voltageDC">DC supply:</span> <input type="text" name="voltageDC" placeholder="___ V" data-section="section2"></label>
+                            <label><span data-i18n="section2.voltageOther">Other:</span> <input type="text" name="voltageOther" data-section="section2"></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section2.networkType">Network type:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="networkTNS" data-section="section2"> <span data-i18n="section2.networkTNS">TN-S</span></label>
+                            <label><input type="checkbox" name="networkTNC" data-section="section2"> <span data-i18n="section2.networkTNC">TN-C</span></label>
+                            <label><input type="checkbox" name="networkTT" data-section="section2"> <span data-i18n="section2.networkTT">TT</span></label>
+                            <label><input type="checkbox" name="networkIT" data-section="section2"> <span data-i18n="section2.networkIT">IT</span></label>
+                            <label><span data-i18n="section2.networkOther">Other:</span> <input type="text" name="networkOther" data-section="section2"></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section2.fuse">Source fuse:</label>
+                        <input type="text" name="fuseValue" placeholder="___ A" data-section="section2">
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section2.shortCircuit">Short-circuit current at installation point (Ik):</label>
+                        <input type="text" name="shortCircuitValue" placeholder="___ kA" data-section="section2">
+                    </div>
+
+                    <h3 data-i18n="section2.subtitle2">2.2 Supply to Cabinet</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section2.cableLength">Supply cable length:</label>
+                        <input type="text" name="cableLengthValue" placeholder="___ m" data-section="section2">
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section2.connection">Connection method:</label>
+                        <label data-i18n="section2.connectionEntry">Entry:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="connectionBottom" data-section="section2"> <span data-i18n="section2.connectionBottom">From bottom</span></label>
+                            <label><input type="checkbox" name="connectionTop" data-section="section2"> <span data-i18n="section2.connectionTop">From top</span></label>
+                            <label><input type="checkbox" name="connectionSide" data-section="section2"> <span data-i18n="section2.connectionSide">From side</span></label>
+                            <label><input type="checkbox" name="connectionNone" data-section="section2"> <span data-i18n="section2.connectionNone">No requirement</span></label>
+                            <label><span data-i18n="section2.connectionOther">Other:</span> <input type="text" name="connectionOther" data-section="section2"></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section2.connectionMethod">Connection method to cabinet:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="connectionTerminal" data-section="section2"> <span data-i18n="section2.connectionTerminal">Terminal block</span></label>
+                            <label><input type="checkbox" name="connectionConnector" data-section="section2"> <span data-i18n="section2.connectionConnector">Connector</span></label>
+                            <label><input type="checkbox" name="connectionMethodNone" data-section="section2"> <span data-i18n="section2.connectionMethodNone">No requirement</span></label>
+                            <label><span data-i18n="section2.connectionMethodOther">Other:</span> <input type="text" name="connectionMethodOther" data-section="section2"></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="cableSuppliedGroup">
+                        <label data-i18n="section2.cableSupplied">Cable will be part of delivery:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="cableSuppliedYes" id="cableSuppliedYes" data-section="section2"> <span data-i18n="section2.cableSuppliedYes">Yes - you can skip the last 2 questions</span></label>
+                            <label><input type="checkbox" name="cableSuppliedNo" id="cableSuppliedNo" data-section="section2"> <span data-i18n="section2.cableSuppliedNo">No</span></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group conditional-field" id="cableMaterialGroup">
+                        <label data-i18n="section2.cableMaterial">Cable material:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="cableMaterialCu" data-section="section2"> <span data-i18n="section2.cableMaterialCu">Cu (copper)</span></label>
+                            <label><input type="checkbox" name="cableMaterialAl" data-section="section2"> <span data-i18n="section2.cableMaterialAl">Al (aluminum)</span></label>
+                            <label><span data-i18n="section2.cableMaterialOther">Other:</span> <input type="text" name="cableMaterialOther" data-section="section2"></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group conditional-field" id="cableSectionGroup">
+                        <label data-i18n="section2.cableSection">Supply cable cross-section:</label>
+                        <input type="text" name="cableSectionValue" placeholder="___ mm²" data-section="section2">
+                    </div>
+                </section>
+
+                <!-- Section 3: Cabinet - General Requirements -->
+                <section class="form-section">
+                    <h2 data-i18n="section3.title">3. CABINET - GENERAL REQUIREMENTS</h2>
+
+                    <h3 data-i18n="section3.subtitle1">3.1 Standards and Certifications</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section3.standards">Required standards:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="standardCE" data-section="section3"> <span data-i18n="section3.standardCE">CE</span></label>
+                            <label><input type="checkbox" name="standardUL" data-section="section3"> <span data-i18n="section3.standardUL">UL / CSA</span></label>
+                            <label><input type="checkbox" name="standardEAC" data-section="section3"> <span data-i18n="section3.standardEAC">EAC</span></label>
+                            <label><input type="checkbox" name="standardATEX" data-section="section3"> <span data-i18n="section3.standardATEX">ATEX</span></label>
+                            <label><span data-i18n="section3.standardOther">Other:</span> <input type="text" name="standardOther" data-section="section3"></label>
+                            <label><input type="checkbox" name="standardNone" data-section="section3"> <span data-i18n="section3.standardNone">No requirement</span></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section3.safety">Functional safety:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="safetyNo" data-section="section3"> <span data-i18n="section3.safetyNo">No</span></label>
+                            <label><span data-i18n="section3.safetySIL">Yes - SIL:</span> <input type="text" name="safetySIL" placeholder="___" data-section="section3"></label>
+                            <label><span data-i18n="section3.safetyPLr">Yes - PLr:</span> <input type="text" name="safetyPLr" placeholder="___" data-section="section3"></label>
+                        </div>
+                    </div>
+
+                    <h3 data-i18n="section3.subtitle2">3.2 Location and Mounting</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section3.installation">Installation type:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="installationFloor" data-section="section3"> <span data-i18n="section3.installationFloor">Free-standing on floor</span></label>
+                            <label><input type="checkbox" name="installationWall" data-section="section3"> <span data-i18n="section3.installationWall">Wall mounting</span></label>
+                            <label><input type="checkbox" name="installationBuiltIn" data-section="section3"> <span data-i18n="section3.installationBuiltIn">Built into machine</span></label>
+                            <label><input type="checkbox" name="installationConsole" data-section="section3"> <span data-i18n="section3.installationConsole">Console/stand</span></label>
+                            <label><span data-i18n="section3.installationOther">Other:</span> <input type="text" name="installationOther" data-section="section3"></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section3.accessibility">Accessibility:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="accessibilityFront" data-section="section3"> <span data-i18n="section3.accessibilityFront">Front side only accessible</span></label>
+                            <label><input type="checkbox" name="accessibilityAll" data-section="section3"> <span data-i18n="section3.accessibilityAll">All sides accessible</span></label>
+                            <label><span data-i18n="section3.accessibilityLimited">Limited space (dimensions:</span> <input type="text" name="accessibilityLimited" placeholder="___" data-section="section3">)</label>
+                        </div>
+                    </div>
+
+                    <h3 data-i18n="section3.subtitle3">3.3 Cabinet Connections</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section3.cableEntries">Cable entries/exits:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="cableEntriesBottom" data-section="section3"> <span data-i18n="section3.cableEntriesBottom">From bottom (cable duct)</span></label>
+                            <label><input type="checkbox" name="cableEntriesTop" data-section="section3"> <span data-i18n="section3.cableEntriesTop">From top</span></label>
+                            <label><input type="checkbox" name="cableEntriesSide" data-section="section3"> <span data-i18n="section3.cableEntriesSide">From side</span></label>
+                            <label><input type="checkbox" name="cableEntriesCombination" data-section="section3"> <span data-i18n="section3.cableEntriesCombination">Combination</span></label>
+                            <label><input type="checkbox" name="cableEntriesNone" data-section="section3"> <span data-i18n="section3.cableEntriesNone">No requirement</span></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section3.connectionType">Connection type:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="connectionTypeTerminal" data-section="section3"> <span data-i18n="section3.connectionTypeTerminal">Terminal blocks</span></label>
+                            <label><span data-i18n="section3.connectionTypeConnectors">Connectors:</span> <input type="text" name="connectionTypeConnectors" data-section="section3"></label>
+                            <label><span data-i18n="section3.connectionTypeCombination">Combination:</span> <input type="text" name="connectionTypeCombination" data-section="section3"></label>
+                            <label><input type="checkbox" name="connectionTypeNone" data-section="section3"> <span data-i18n="section3.connectionTypeNone">No requirement</span></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section3.wireLabeling">Wire labeling:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="wireLabelingTags" data-section="section3"> <span data-i18n="section3.wireLabelingTags">Tags</span></label>
+                            <label><input type="checkbox" name="wireLabelingSleeving" data-section="section3"> <span data-i18n="section3.wireLabelingSleeving">Sleeving with description</span></label>
+                            <label><input type="checkbox" name="wireLabelingNone" data-section="section3"> <span data-i18n="section3.wireLabelingNone">No requirement</span></label>
+                            <label><span data-i18n="section3.wireLabelingOther">Other:</span> <input type="text" name="wireLabelingOther" data-section="section3"></label>
+                        </div>
+                    </div>
+
+                    <h3 data-i18n="section3.subtitle4">3.4 Cable Harnesses</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section3.harness">Cable harness production outside cabinet:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="harnessYes" data-section="section3"> <span data-i18n="section3.harnessYes">Yes (please provide more information as attachment)</span></label>
+                            <label><input type="checkbox" name="harnessNo" data-section="section3"> <span data-i18n="section3.harnessNo">No</span></label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 4: Outputs and Loads -->
+                <section class="form-section">
+                    <h2 data-i18n="section4.title">4. OUTPUTS AND LOADS</h2>
+
+                    <h3 data-i18n="section4.loadsSubtitle">Loads</h3>
+
+                    <div class="table-container">
+                        <table id="loadsTable" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="section4.loadsTable.number">#</th>
+                                    <th data-i18n="section4.loadsTable.name">Name</th>
+                                    <th data-i18n="section4.loadsTable.type">Load Type</th>
+                                    <th data-i18n="section4.loadsTable.voltage">Voltage</th>
+                                    <th data-i18n="section4.loadsTable.current">Current (A)</th>
+                                    <th data-i18n="section4.loadsTable.protection">Protection Type</th>
+                                    <th data-i18n="section4.loadsTable.control">Control Type</th>
+                                    <th data-i18n="section4.loadsTable.cableLength">Cable Length (m)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="loadsTableBody">
+                                <!-- Rows will be dynamically added by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-legend">
+                        <p><strong data-i18n="section4.loadsLegend">Legend:</strong></p>
+                        <ul>
+                            <li data-i18n="section4.loadsLegendType">Load Type: Motor / Heating / Valve / Relay / Indicator / Other</li>
+                            <li data-i18n="section4.loadsLegendProtection">Protection Type: Circuit Breaker / Motor Circuit Breaker / Contactor / Fuse / RCD / Disconnector / Other</li>
+                            <li data-i18n="section4.loadsLegendControl">Control Type: Direct Start / Frequency Converter / Star-Delta / Soft-start / Relay / Other</li>
+                            <li data-i18n="section4.loadsLegendCable">Cable Length: Distance from cabinet to load</li>
+                        </ul>
+                    </div>
+
+                    <h3 data-i18n="section4.ioSubtitle">Control Outputs and Inputs</h3>
+
+                    <div class="table-container">
+                        <table id="ioTable" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="section4.ioTable.number">#</th>
+                                    <th data-i18n="section4.ioTable.name">Name</th>
+                                    <th data-i18n="section4.ioTable.io">I/O</th>
+                                    <th data-i18n="section4.ioTable.ad">A/D</th>
+                                    <th data-i18n="section4.ioTable.type">Type</th>
+                                    <th data-i18n="section4.ioTable.notes">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ioTableBody">
+                                <!-- Rows will be dynamically added by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-legend">
+                        <p><strong data-i18n="section4.ioLegend">Legend:</strong></p>
+                        <ul>
+                            <li data-i18n="section4.ioLegendIO">I/O: I = Input / O = Output</li>
+                            <li data-i18n="section4.ioLegendAD">A/D: A = Analog / D = Digital</li>
+                            <li><strong data-i18n="section4.ioLegendNotes">Notes:</strong>
+                                <ul>
+                                    <li data-i18n="section4.ioLegendNotesInputs">For inputs: Sensor type (inductive, limit switch, button...), voltage (24V DC, 230V AC...)</li>
+                                    <li data-i18n="section4.ioLegendNotesOutputs">For outputs: Type (relay, valve...), voltage, current</li>
+                                    <li data-i18n="section4.ioLegendNotesAnalog">For analog: Signal range (4-20mA, 0-10V, Pt100...)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Section 5: Control -->
+                <section class="form-section">
+                    <h2 data-i18n="section5.title">5. CONTROL</h2>
+
+                    <h3 data-i18n="section5.subtitle1">5.1 Control Type</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section5.controlType">Control method:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="controlRelay" data-section="section5"> <span data-i18n="section5.controlRelay">Relay logic</span></label>
+                            <label><input type="checkbox" name="controlPLC" data-section="section5"> <span data-i18n="section5.controlPLC">PLC</span></label>
+                            <label><input type="checkbox" name="controlCombination" data-section="section5"> <span data-i18n="section5.controlCombination">Combination (relay + PLC)</span></label>
+                            <label><input type="checkbox" name="controlVFD" data-section="section5"> <span data-i18n="section5.controlVFD">Frequency converter with built-in PLC</span></label>
+                            <label><input type="checkbox" name="controlNone" data-section="section5"> <span data-i18n="section5.controlNone">No requirement</span></label>
+                            <label><span data-i18n="section5.controlOther">Other:</span> <input type="text" name="controlOther" data-section="section5"></label>
+                        </div>
+                    </div>
+
+                    <h3 data-i18n="section5.subtitle2">5.2 Communication</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section5.fieldbus">Industrial fieldbus:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="fieldbusProfiNet" data-section="section5"> <span data-i18n="section5.fieldbusProfiNet">PROFINET</span></label>
+                            <label><input type="checkbox" name="fieldbusEtherNetIP" data-section="section5"> <span data-i18n="section5.fieldbusEtherNetIP">EtherNet/IP</span></label>
+                            <label><input type="checkbox" name="fieldbusEtherCAT" data-section="section5"> <span data-i18n="section5.fieldbusEtherCAT">EtherCAT</span></label>
+                            <label><input type="checkbox" name="fieldbusModbusTCP" data-section="section5"> <span data-i18n="section5.fieldbusModbusTCP">Modbus TCP</span></label>
+                            <label><input type="checkbox" name="fieldbusModbusRTU" data-section="section5"> <span data-i18n="section5.fieldbusModbusRTU">Modbus RTU</span></label>
+                            <label><input type="checkbox" name="fieldbusCANopen" data-section="section5"> <span data-i18n="section5.fieldbusCANopen">CANopen</span></label>
+                            <label><input type="checkbox" name="fieldbusProfibus" data-section="section5"> <span data-i18n="section5.fieldbusProfibus">PROFIBUS</span></label>
+                            <label><input type="checkbox" name="fieldbusNone" data-section="section5"> <span data-i18n="section5.fieldbusNone">No requirement</span></label>
+                            <label><span data-i18n="section5.fieldbusOther">Other:</span> <input type="text" name="fieldbusOther" data-section="section5"></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section5.switch">Ethernet switch:</label>
+                        <div class="checkbox-group">
+                            <label><span data-i18n="section5.switchYes">Yes - number of ports:</span> <input type="text" name="switchYes" placeholder="___" data-section="section5"></label>
+                            <label><input type="checkbox" name="switchNo" data-section="section5"> <span data-i18n="section5.switchNo">No</span></label>
+                            <label><input type="checkbox" name="switchNone" data-section="section5"> <span data-i18n="section5.switchNone">No requirement</span></label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 6: HMI and Control -->
+                <section class="form-section">
+                    <h2 data-i18n="section6.title">6. HMI AND CONTROL</h2>
+
+                    <h3 data-i18n="section6.subtitle1">6.1 Operator Panel (HMI)</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section6.panelType">Panel type:</label>
+                        <div class="checkbox-group">
+                            <label><span data-i18n="section6.panelTouch">Touch panel - size:</span> <input type="text" name="panelTouch" placeholder="___ inches" data-section="section6"></label>
+                            <label><input type="checkbox" name="panelButton" data-section="section6"> <span data-i18n="section6.panelButton">Button panel</span></label>
+                            <label><input type="checkbox" name="panelCombination" data-section="section6"> <span data-i18n="section6.panelCombination">Combination (Panel + buttons)</span></label>
+                            <label><input type="checkbox" name="panelExternal" data-section="section6"> <span data-i18n="section6.panelExternal">No panel (external control)</span></label>
+                            <label><input type="checkbox" name="panelNone" data-section="section6"> <span data-i18n="section6.panelNone">No requirement</span></label>
+                            <label><span data-i18n="section6.panelOther">Other:</span> <input type="text" name="panelOther" data-section="section6"></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section6.location">HMI location:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="locationDoor" data-section="section6"> <span data-i18n="section6.locationDoor">On cabinet door</span></label>
+                            <label><span data-i18n="section6.locationSeparate">Separate panel (cable length:</span> <input type="text" name="locationSeparate" placeholder="___ m" data-section="section6">)</label>
+                            <label><input type="checkbox" name="locationNone" data-section="section6"> <span data-i18n="section6.locationNone">No requirement</span></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section6.language">HMI language:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="languageCZ" data-section="section6"> <span data-i18n="section6.languageCZ">Czech</span></label>
+                            <label><input type="checkbox" name="languageEN" data-section="section6"> <span data-i18n="section6.languageEN">English</span></label>
+                            <label><input type="checkbox" name="languageDE" data-section="section6"> <span data-i18n="section6.languageDE">German</span></label>
+                            <label><input type="checkbox" name="languageSymbols" data-section="section6"> <span data-i18n="section6.languageSymbols">Symbols only (no text)</span></label>
+                            <label><span data-i18n="section6.languageMultiple">Multiple languages:</span> <input type="text" name="languageMultiple" data-section="section6"></label>
+                            <label><span data-i18n="section6.languageOther">Other:</span> <input type="text" name="languageOther" data-section="section6"></label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 7: Mechanical Construction -->
+                <section class="form-section">
+                    <h2 data-i18n="section7.title">7. MECHANICAL CONSTRUCTION</h2>
+
+                    <h3 data-i18n="section7.subtitle1">7.1 Dimensions</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section7.dimensions">Required dimensions:</label>
+                        <div>
+                            <input type="text" name="height" placeholder="Height: ___ mm" data-section="section7">
+                            <label><input type="checkbox" name="heightNone" data-section="section7"> <span data-i18n="section7.heightNone">No requirement</span></label>
+                        </div>
+                        <div>
+                            <input type="text" name="width" placeholder="Width: ___ mm" data-section="section7">
+                            <label><input type="checkbox" name="widthNone" data-section="section7"> <span data-i18n="section7.widthNone">No requirement</span></label>
+                        </div>
+                        <div>
+                            <input type="text" name="depth" placeholder="Depth: ___ mm" data-section="section7">
+                            <label><input type="checkbox" name="depthNone" data-section="section7"> <span data-i18n="section7.depthNone">No requirement</span></label>
+                        </div>
+                    </div>
+
+                    <h3 data-i18n="section7.subtitle2">7.2 Color</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section7.color">Cabinet color:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="colorRAL7035" data-section="section7"> <span data-i18n="section7.colorRAL7035">RAL 7035</span></label>
+                            <label><input type="checkbox" name="colorRAL7032" data-section="section7"> <span data-i18n="section7.colorRAL7032">RAL 7032</span></label>
+                            <label><span data-i18n="section7.colorOther">Other RAL:</span> <input type="text" name="colorOther" placeholder="___" data-section="section7"></label>
+                            <label><input type="checkbox" name="colorNone" data-section="section7"> <span data-i18n="section7.colorNone">No requirement</span></label>
+                        </div>
+                    </div>
+
+                    <h3 data-i18n="section7.subtitle3">7.3 Doors and Access</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section7.doorType">Door type:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="doorSingle" data-section="section7"> <span data-i18n="section7.doorSingle">Single door</span></label>
+                            <label><input type="checkbox" name="doorDouble" data-section="section7"> <span data-i18n="section7.doorDouble">Double door</span></label>
+                            <label><input type="checkbox" name="doorNone" data-section="section7"> <span data-i18n="section7.doorNone">No requirement</span></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section7.lock">Lock:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="lockStandard" data-section="section7"> <span data-i18n="section7.lockStandard">Standard lock with key</span></label>
+                            <label><input type="checkbox" name="lockNo" data-section="section7"> <span data-i18n="section7.lockNo">No lock</span></label>
+                            <label><span data-i18n="section7.lockOther">Other:</span> <input type="text" name="lockOther" data-section="section7"></label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 8: PLC Software -->
+                <section class="form-section">
+                    <h2 data-i18n="section8.title">8. PLC SOFTWARE</h2>
+
+                    <div class="form-group">
+                        <label data-i18n="section8.programming">PLC programming:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="programmingFull" data-section="section8"> <span data-i18n="section8.programmingFull">Yes - Schaltag CZ will create complete program</span></label>
+                            <label><input type="checkbox" name="programmingPartial" data-section="section8"> <span data-i18n="section8.programmingPartial">Partially - Schaltag CZ will create base</span></label>
+                            <label><input type="checkbox" name="programmingNo" data-section="section8"> <span data-i18n="section8.programmingNo">No - customer will provide program</span></label>
+                            <label><input type="checkbox" name="programmingNotNeeded" data-section="section8"> <span data-i18n="section8.programmingNotNeeded">Not needed (Relay logic)</span></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section8.visualization">HMI visualization:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="visualizationYes" data-section="section8"> <span data-i18n="section8.visualizationYes">Yes - Schaltag CZ will create</span></label>
+                            <label><input type="checkbox" name="visualizationNo" data-section="section8"> <span data-i18n="section8.visualizationNo">No - customer will create</span></label>
+                            <label><input type="checkbox" name="visualizationNotNeeded" data-section="section8"> <span data-i18n="section8.visualizationNotNeeded">Not needed</span></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section8.sourceCode">Source codes:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="sourceCodeYes" data-section="section8"> <span data-i18n="section8.sourceCodeYes">Yes, required</span></label>
+                            <label><input type="checkbox" name="sourceCodeNo" data-section="section8"> <span data-i18n="section8.sourceCodeNo">No</span></label>
+                        </div>
+                    </div>
+
+                    <h3 data-i18n="section8.subtitle1">8.1 Testing</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="section8.fat">FAT (Factory Acceptance Test):</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="fatFactory" data-section="section8"> <span data-i18n="section8.fatFactory">Yes - at Schaltag CZ facility</span></label>
+                            <label><input type="checkbox" name="fatSite" data-section="section8"> <span data-i18n="section8.fatSite">Yes - at installation site or customer facility</span></label>
+                            <label><input type="checkbox" name="fatNo" data-section="section8"> <span data-i18n="section8.fatNo">No</span></label>
+                            <label><input type="checkbox" name="fatNone" data-section="section8"> <span data-i18n="section8.fatNone">No requirement</span></label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 9: Notes and Attachments -->
+                <section class="form-section">
+                    <h2 data-i18n="section9.title">9. NOTES AND ATTACHMENTS</h2>
+
+                    <div class="form-group">
+                        <label data-i18n="section9.specialRequirements">Special requirements:</label>
+                        <textarea name="specialRequirements" rows="5" data-section="section9"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="section9.attachments">Attached documents:</label>
+                        <div class="checkbox-group">
+                            <label><span data-i18n="section9.attachmentSchema">Existing schematic:</span> <input type="text" name="attachmentSchema" data-section="section9"></label>
+                            <label><span data-i18n="section9.attachmentPhotos">Photos:</span> <input type="text" name="attachmentPhotos" data-section="section9"></label>
+                            <label><span data-i18n="section9.attachmentDatasheets">Technical datasheets:</span> <input type="text" name="attachmentDatasheets" data-section="section9"></label>
+                            <label><span data-i18n="section9.attachmentOther">Other:</span> <input type="text" name="attachmentOther" data-section="section9"></label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Download Button -->
+                <div class="download-section">
+                    <button type="button" id="downloadPDF" class="btn-primary" data-i18n="downloadPdf">Download PDF</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3 data-i18n="instructions">Instructions:</h3>
+                <p data-i18n="instructionsText">Please send the completed questionnaire to:</p>
+                <p id="footer-email">📧 sales@schaltag.cz</p>
+            </div>
+            <div class="footer-section">
+                <h3 data-i18n="contact">Contact:</h3>
+                <p id="footer-phone">📞 +420 465 552 600</p>
+                <p id="footer-address">📍 Moravská 1571, CZ - 562 01, Ústí nad Orlicí</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <h2 data-i18n="successTitle">✅ Questionnaire generated successfully!</h2>
+            <p data-i18n="successMessage">Please send the completed questionnaire to:</p>
+            <p><strong id="modal-email">📧 sales@schaltag.cz</strong></p>
+            <br>
+            <p data-i18n="contactUs">Contact us with any questions:</p>
+            <p id="modal-phone">📞 +420 465 552 600</p>
+            <p id="modal-address">📍 Moravská 1571, CZ - 562 01, Ústí nad Orlicí</p>
+            <br>
+            <button id="closeModal" class="btn-primary" data-i18n="close">Close</button>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p data-i18n="loading">Generating PDF...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
