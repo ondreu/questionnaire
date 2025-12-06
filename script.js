@@ -398,6 +398,33 @@ async function generatePDF() {
             return el.value || '';
         };
 
+        // Helper to collect checked checkboxes and associated text inputs from a section
+        const collectSection = (sectionAttr) => {
+            const items = [];
+            const elements = document.querySelectorAll(`[data-section="${sectionAttr}"]`);
+
+            elements.forEach(el => {
+                if (el.type === 'checkbox' && el.checked) {
+                    const label = el.closest('label');
+                    if (label) {
+                        const spanText = label.querySelector('span')?.textContent || '';
+                        const textInput = label.querySelector('input[type="text"]');
+                        if (textInput && textInput.value.trim()) {
+                            items.push(`${spanText} ${textInput.value}`);
+                        } else if (spanText) {
+                            items.push(spanText);
+                        }
+                    }
+                } else if ((el.type === 'text' || el.tagName === 'TEXTAREA') && el.value.trim() && !el.closest('label')?.querySelector('input[type="checkbox"]')) {
+                    // Standalone text inputs (not part of checkbox labels)
+                    const label = el.closest('.form-group')?.querySelector('label')?.textContent || el.name;
+                    items.push(`${label}: ${el.value}`);
+                }
+            });
+
+            return items;
+        };
+
         // Collect all form data
         const data = {
             customer: getVal('customer'),
@@ -407,7 +434,15 @@ async function generatePDF() {
             date: getVal('date'),
             projectName: getVal('projectName'),
             projectCode: getVal('projectCode'),
-            specialRequirements: getVal('specialRequirements')
+            specialRequirements: getVal('specialRequirements'),
+            section1: collectSection('section1'),
+            section2: collectSection('section2'),
+            section3: collectSection('section3'),
+            section5: collectSection('section5'),
+            section6: collectSection('section6'),
+            section7: collectSection('section7'),
+            section8: collectSection('section8'),
+            section9: collectSection('section9')
         };
 
         // Collect table data
@@ -485,6 +520,18 @@ async function generatePDF() {
     ${data.projectName ? `<div class="field"><span class="field-label">${t('header.projectName')}</span><span class="field-value">${data.projectName}</span></div>` : ''}
     ${data.projectCode ? `<div class="field"><span class="field-label">${t('header.projectCode')}</span><span class="field-value">${data.projectCode}</span></div>` : ''}
 
+    ${data.section1 && data.section1.length > 0 ? `
+    <h2>${t('section1.title')}</h2>
+    ${data.section1.map(item => `<div class="field"><span class="field-value">• ${item}</span></div>`).join('')}` : ''}
+
+    ${data.section2 && data.section2.length > 0 ? `
+    <h2>${t('section2.title')}</h2>
+    ${data.section2.map(item => `<div class="field"><span class="field-value">• ${item}</span></div>`).join('')}` : ''}
+
+    ${data.section3 && data.section3.length > 0 ? `
+    <h2>${t('section3.title')}</h2>
+    ${data.section3.map(item => `<div class="field"><span class="field-value">• ${item}</span></div>`).join('')}` : ''}
+
     ${loads.length > 0 ? `
     <h2>${t('section4.loadsSubtitle')}</h2>
     <table>
@@ -522,6 +569,22 @@ async function generatePDF() {
             ${ios.map(i => `<tr><td>${i.num}</td><td>${i.name}</td><td>${i.io}</td><td>${i.ad}</td><td>${i.type}</td><td>${i.notes}</td></tr>`).join('')}
         </tbody>
     </table>` : ''}
+
+    ${data.section5 && data.section5.length > 0 ? `
+    <h2>${t('section5.title')}</h2>
+    ${data.section5.map(item => `<div class="field"><span class="field-value">• ${item}</span></div>`).join('')}` : ''}
+
+    ${data.section6 && data.section6.length > 0 ? `
+    <h2>${t('section6.title')}</h2>
+    ${data.section6.map(item => `<div class="field"><span class="field-value">• ${item}</span></div>`).join('')}` : ''}
+
+    ${data.section7 && data.section7.length > 0 ? `
+    <h2>${t('section7.title')}</h2>
+    ${data.section7.map(item => `<div class="field"><span class="field-value">• ${item}</span></div>`).join('')}` : ''}
+
+    ${data.section8 && data.section8.length > 0 ? `
+    <h2>${t('section8.title')}</h2>
+    ${data.section8.map(item => `<div class="field"><span class="field-value">• ${item}</span></div>`).join('')}` : ''}
 
     ${data.specialRequirements ? `
     <h2>${t('section9.title')}</h2>

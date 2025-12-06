@@ -109,15 +109,24 @@
                     <div class="form-group">
                         <label data-i18n="section1.temperature">Ambient temperature:</label>
                         <div class="input-row">
-                            <input type="text" name="tempMin" placeholder="Min °C" data-section="section1">
-                            <input type="text" name="tempMax" placeholder="Max °C" data-section="section1">
+                            <div class="input-with-unit">
+                                <input type="text" name="tempMin" placeholder="Min" data-section="section1">
+                                <span class="unit-label">°C</span>
+                            </div>
+                            <div class="input-with-unit">
+                                <input type="text" name="tempMax" placeholder="Max" data-section="section1">
+                                <span class="unit-label">°C</span>
+                            </div>
                         </div>
                         <label><input type="checkbox" name="tempStandard" data-section="section1"> <span data-i18n="section1.tempStandard">No requirement - Standard (-5°C to +40°C)</span></label>
                     </div>
 
                     <div class="form-group">
                         <label data-i18n="section1.altitude">Altitude:</label>
-                        <input type="text" name="altitudeValue" placeholder="m a.s.l." data-section="section1">
+                        <div class="input-with-unit">
+                            <input type="text" name="altitudeValue" data-section="section1">
+                            <span class="unit-label">m a.s.l.</span>
+                        </div>
                         <label><input type="checkbox" name="altitudeStandard" data-section="section1"> <span data-i18n="section1.altitudeStandard">No requirement - Standard (< 2000 m a.s.l.)</span></label>
                     </div>
                 </section>
@@ -134,7 +143,7 @@
                             <label><input type="checkbox" name="voltage230" data-section="section2"> <span data-i18n="section2.voltage230">1x 230 V AC / 50 Hz</span></label>
                             <label><input type="checkbox" name="voltage400" data-section="section2"> <span data-i18n="section2.voltage400">3x 400 V AC / 50 Hz</span></label>
                             <label><input type="checkbox" name="voltage480" data-section="section2"> <span data-i18n="section2.voltage480">3x 480 V AC / 60 Hz (USA)</span></label>
-                            <label><span data-i18n="section2.voltageDC">DC supply:</span> <input type="text" name="voltageDC" placeholder="V" data-section="section2"></label>
+                            <label><span data-i18n="section2.voltageDC">DC supply:</span> <div class="input-with-unit"><input type="text" name="voltageDC" data-section="section2"><span class="unit-label">V</span></div></label>
                             <label><span data-i18n="section2.voltageOther">Other:</span> <input type="text" name="voltageOther" data-section="section2"></label>
                         </div>
                     </div>
@@ -152,19 +161,28 @@
 
                     <div class="form-group">
                         <label data-i18n="section2.fuse">Source fuse:</label>
-                        <input type="text" name="fuseValue" placeholder="A" data-section="section2">
+                        <div class="input-with-unit">
+                            <input type="text" name="fuseValue" data-section="section2">
+                            <span class="unit-label">A</span>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label data-i18n="section2.shortCircuit">Short-circuit current at installation point (Ik):</label>
-                        <input type="text" name="shortCircuitValue" placeholder="kA" data-section="section2">
+                        <div class="input-with-unit">
+                            <input type="text" name="shortCircuitValue" data-section="section2">
+                            <span class="unit-label">kA</span>
+                        </div>
                     </div>
 
                     <h3 data-i18n="section2.subtitle2">2.2 Supply to Cabinet</h3>
 
                     <div class="form-group">
                         <label data-i18n="section2.cableLength">Supply cable length:</label>
-                        <input type="text" name="cableLengthValue" placeholder="m" data-section="section2">
+                        <div class="input-with-unit">
+                            <input type="text" name="cableLengthValue" data-section="section2">
+                            <span class="unit-label">m</span>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -208,7 +226,10 @@
 
                     <div class="form-group conditional-field" id="cableSectionGroup">
                         <label data-i18n="section2.cableSection">Supply cable cross-section:</label>
-                        <input type="text" name="cableSectionValue" placeholder="mm²" data-section="section2">
+                        <div class="input-with-unit">
+                            <input type="text" name="cableSectionValue" data-section="section2">
+                            <span class="unit-label">mm²</span>
+                        </div>
                     </div>
                 </section>
 
@@ -257,7 +278,7 @@
                         <div class="checkbox-group">
                             <label><input type="checkbox" name="accessibilityFront" data-section="section3"> <span data-i18n="section3.accessibilityFront">Front side only accessible</span></label>
                             <label><input type="checkbox" name="accessibilityAll" data-section="section3"> <span data-i18n="section3.accessibilityAll">All sides accessible</span></label>
-                            <label><input type="checkbox" name="accessibilityLimitedCheck" data-section="section3"> <span data-i18n="section3.accessibilityLimited">Limited space (dimensions:</span> <input type="text" name="accessibilityLimited" placeholder="mm" data-section="section3">)</label>
+                            <label><input type="checkbox" name="accessibilityLimitedCheck" data-section="section3"> <span data-i18n="section3.accessibilityLimited">Limited space (dimensions:</span> <div class="input-with-unit"><input type="text" name="accessibilityLimited" data-section="section3"><span class="unit-label">mm</span></div>)</label>
                         </div>
                     </div>
 
@@ -431,7 +452,7 @@
                     <div class="form-group">
                         <label data-i18n="section6.panelType">Panel type:</label>
                         <div class="checkbox-group">
-                            <label><input type="checkbox" name="panelTouchCheck" data-section="section6"> <span data-i18n="section6.panelTouch">Touch panel - size:</span> <input type="text" name="panelTouch" placeholder="inches" data-section="section6"></label>
+                            <label><input type="checkbox" name="panelTouchCheck" data-section="section6"> <span data-i18n="section6.panelTouch">Touch panel - size:</span> <div class="input-with-unit"><input type="text" name="panelTouch" data-section="section6"><span class="unit-label">inches</span></div></label>
                             <label><input type="checkbox" name="panelButton" data-section="section6"> <span data-i18n="section6.panelButton">Button panel</span></label>
                             <label><input type="checkbox" name="panelCombination" data-section="section6"> <span data-i18n="section6.panelCombination">Combination (Panel + buttons)</span></label>
                             <label><input type="checkbox" name="panelExternal" data-section="section6"> <span data-i18n="section6.panelExternal">No panel (external control)</span></label>
@@ -444,7 +465,7 @@
                         <label data-i18n="section6.location">HMI location:</label>
                         <div class="checkbox-group">
                             <label><input type="checkbox" name="locationDoor" data-section="section6"> <span data-i18n="section6.locationDoor">On cabinet door</span></label>
-                            <label><input type="checkbox" name="locationSeparateCheck" data-section="section6"> <span data-i18n="section6.locationSeparate">Separate panel (cable length:</span> <input type="text" name="locationSeparate" placeholder="m" data-section="section6">)</label>
+                            <label><input type="checkbox" name="locationSeparateCheck" data-section="section6"> <span data-i18n="section6.locationSeparate">Separate panel (cable length:</span> <div class="input-with-unit"><input type="text" name="locationSeparate" data-section="section6"><span class="unit-label">m</span></div>)</label>
                             <label><input type="checkbox" name="locationNone" data-section="section6"> <span data-i18n="section6.locationNone">No requirement</span></label>
                         </div>
                     </div>
@@ -471,15 +492,24 @@
                     <div class="form-group">
                         <label data-i18n="section7.dimensions">Required dimensions:</label>
                         <div>
-                            <input type="text" name="height" placeholder="mm" data-section="section7">
+                            <div class="input-with-unit">
+                                <input type="text" name="height" placeholder="Height" data-section="section7">
+                                <span class="unit-label">mm</span>
+                            </div>
                             <label><input type="checkbox" name="heightNone" data-section="section7"> <span data-i18n="section7.heightNone">No requirement</span></label>
                         </div>
                         <div>
-                            <input type="text" name="width" placeholder="mm" data-section="section7">
+                            <div class="input-with-unit">
+                                <input type="text" name="width" placeholder="Width" data-section="section7">
+                                <span class="unit-label">mm</span>
+                            </div>
                             <label><input type="checkbox" name="widthNone" data-section="section7"> <span data-i18n="section7.widthNone">No requirement</span></label>
                         </div>
                         <div>
-                            <input type="text" name="depth" placeholder="mm" data-section="section7">
+                            <div class="input-with-unit">
+                                <input type="text" name="depth" placeholder="Depth" data-section="section7">
+                                <span class="unit-label">mm</span>
+                            </div>
                             <label><input type="checkbox" name="depthNone" data-section="section7"> <span data-i18n="section7.depthNone">No requirement</span></label>
                         </div>
                     </div>
