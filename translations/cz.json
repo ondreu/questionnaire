@@ -5,7 +5,7 @@
   "clearData": "Vymazat všechna data",
   "confirmClear": "Opravdu chcete smazat všechna data formuláře? Tuto akci nelze vrátit zpět.",
   "emailSubject": "Engineering dotazník",
-  "emailBody": "Dobrý den,\n\npřiložený dokument obsahuje vyplněný engineering dotazník.\n\nProjekt: {projectName}\nZákazník: {customer}\nDatum: {date}\n\nS pozdravem",
+  "emailBody": "Dobrý den,\n\npřiložený dokument obsahuje vyplněný engineering dotazník.\n- Zákazník: {customer}\n- Projekt: {projectName}\n- Číslo projektu: {projectCode}\n\nS pozdravem",
   "instructions": "Instrukce:",
   "instructionsText": "Prosím odešlete vyplněný dotazník na:",
   "contact": "Kontakt:",

@@ -5,7 +5,7 @@
   "clearData": "Clear All Data",
   "confirmClear": "Are you sure you want to delete all form data? This action cannot be undone.",
   "emailSubject": "Engineering Questionnaire",
-  "emailBody": "Dear Schaltag team,\n\nPlease find attached the completed engineering questionnaire.\n\nProject: {projectName}\nCustomer: {customer}\nDate: {date}\n\nBest regards",
+  "emailBody": "Dear Schaltag team,\n\nPlease find attached the completed engineering questionnaire.\n- Customer: {customer}\n- Project: {projectName}\n- Project number: {projectCode}\n\nBest regards",
   "instructions": "Instructions:",
   "instructionsText": "Please send the completed questionnaire to:",
   "contact": "Contact:",

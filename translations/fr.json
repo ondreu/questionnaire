@@ -5,7 +5,7 @@
   "clearData": "Effacer toutes les données",
   "confirmClear": "Voulez-vous vraiment supprimer toutes les données du formulaire? Cette action est irréversible.",
   "emailSubject": "Questionnaire Technique",
-  "emailBody": "Bonjour,\n\nVeuillez trouver ci-joint le questionnaire technique rempli.\n\nProjet: {projectName}\nClient: {customer}\nDate: {date}\n\nCordialement",
+  "emailBody": "Bonjour,\n\nVeuillez trouver ci-joint le questionnaire technique rempli.\n- Client: {customer}\n- Projet: {projectName}\n- Numéro de projet: {projectCode}\n\nCordialement",
   "instructions": "Instructions:",
   "instructionsText": "Veuillez envoyer le questionnaire rempli à:",
   "contact": "Contact:",

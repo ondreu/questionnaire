@@ -5,7 +5,7 @@
   "clearData": "Alle Daten löschen",
   "confirmClear": "Möchten Sie wirklich alle Formulardaten löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
   "emailSubject": "Engineering-Fragebogen",
-  "emailBody": "Sehr geehrtes Schaltag-Team,\n\nanbei finden Sie den ausgefüllten Engineering-Fragebogen.\n\nProjekt: {projectName}\nKunde: {customer}\nDatum: {date}\n\nMit freundlichen Grüßen",
+  "emailBody": "Sehr geehrtes Schaltag-Team,\n\nanbei finden Sie den ausgefüllten Engineering-Fragebogen.\n- Kunde: {customer}\n- Projekt: {projectName}\n- Projektnummer: {projectCode}\n\nMit freundlichen Grüßen",
   "instructions": "Anweisungen:",
   "instructionsText": "Bitte senden Sie den ausgefüllten Fragebogen an:",
   "contact": "Kontakt:",

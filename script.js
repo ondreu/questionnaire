@@ -595,13 +595,26 @@ async function generatePDF() {
         ].filter(Boolean).join(', ') || '-'}</span></div>
 
         <h2>${t('section8.title')}</h2>
-        <div class="field"><span class="field-label">${t('section8.plcBrand')}</span><span class="field-value">${[
-            getVal('plcSiemens') && t('section8.plcSiemens'),
-            getVal('plcRockwell') && t('section8.plcRockwell'),
-            getVal('plcSchneider') && t('section8.plcSchneider'),
-            getVal('plcOmron') && t('section8.plcOmron'),
-            getVal('plcNone') && t('section8.plcNone'),
-            getVal('plcOther') && getVal('plcOther')
+        <div class="field"><span class="field-label">${t('section8.programming')}</span><span class="field-value">${[
+            getVal('programmingFull') && t('section8.programmingFull'),
+            getVal('programmingPartial') && t('section8.programmingPartial'),
+            getVal('programmingNo') && t('section8.programmingNo'),
+            getVal('programmingNotNeeded') && t('section8.programmingNotNeeded')
+        ].filter(Boolean).join(', ') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('section8.visualization')}</span><span class="field-value">${[
+            getVal('visualizationYes') && t('section8.visualizationYes'),
+            getVal('visualizationNo') && t('section8.visualizationNo'),
+            getVal('visualizationNotNeeded') && t('section8.visualizationNotNeeded')
+        ].filter(Boolean).join(', ') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('section8.sourceCode')}</span><span class="field-value">${[
+            getVal('sourceCodeYes') && t('section8.sourceCodeYes'),
+            getVal('sourceCodeNo') && t('section8.sourceCodeNo')
+        ].filter(Boolean).join(', ') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('section8.fat')}</span><span class="field-value">${[
+            getVal('fatFactory') && t('section8.fatFactory'),
+            getVal('fatSite') && t('section8.fatSite'),
+            getVal('fatNo') && t('section8.fatNo'),
+            getVal('fatNone') && t('section8.fatNone')
         ].filter(Boolean).join(', ') || '-'}</span></div>
 
         ${getVal('specialRequirements') ? `
@@ -681,7 +694,7 @@ function sendEmail() {
     // Get form data
     const projectName = document.querySelector('[name="projectName"]')?.value || '-';
     const customer = document.querySelector('[name="customer"]')?.value || '-';
-    const date = document.querySelector('[name="date"]')?.value || new Date().toLocaleDateString();
+    const projectCode = document.querySelector('[name="projectCode"]')?.value || '-';
 
     // Build email subject
     const subject = t.emailSubject || 'Engineering Questionnaire';
@@ -690,7 +703,7 @@ function sendEmail() {
     let body = t.emailBody || 'Please find attached the completed engineering questionnaire.';
     body = body.replace('{projectName}', projectName);
     body = body.replace('{customer}', customer);
-    body = body.replace('{date}', date);
+    body = body.replace('{projectCode}', projectCode);
 
     // Get recipient email from config
     const recipient = config.EMAIL || 'sales@schaltag.cz';
