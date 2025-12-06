@@ -1,0 +1,4 @@
+EMAIL=sales@schaltag.cz
+PHONE=+420 465 552 600
+ADDRESS=Moravská 1571, CZ - 562 01, Ústí nad Orlicí
+DEFAULT_LANGUAGE=en
