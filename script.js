@@ -376,95 +376,173 @@ function updateProgress() {
 }
 
 
-// Generate PDF
+// Generate PDF using HTML print
 async function generatePDF() {
     document.getElementById('loadingOverlay').classList.add('active');
+
     try {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        let yPos = 20;
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
-        const margin = 20;
-        const contentWidth = pageWidth - (2 * margin);
-
-        // Add logo with aspect ratio
-        try {
-            const logoImg = document.getElementById('logo');
-            if (logoImg && logoImg.complete) {
-                const canvas = document.createElement('canvas');
-                canvas.width = logoImg.naturalWidth;
-                canvas.height = logoImg.naturalHeight;
-                canvas.getContext('2d').drawImage(logoImg, 0, 0);
-                const logoWidth = 40;
-                const logoHeight = logoWidth * (logoImg.naturalHeight / logoImg.naturalWidth);
-                doc.addImage(canvas.toDataURL('image/png'), 'PNG', margin, yPos, logoWidth, logoHeight);
-            }
-        } catch (error) {}
-
-        doc.setFontSize(16);
-        doc.setFont(undefined, 'bold');
-        doc.text(translations[currentLanguage]?.pageTitle || 'Engineering Questionnaire', pageWidth / 2, yPos + 10, { align: 'center' });
-        yPos += 30;
-
         const t = (key) => getNestedTranslation(translations[currentLanguage], key) || key;
         const getVal = (name) => {
             const el = document.querySelector(`[name="${name}"]`);
-            return el ? (el.type === 'checkbox' ? (el.checked ? '✓' : '') : el.value || '') : '';
+            if (!el) return '';
+            if (el.type === 'checkbox') return el.checked ? '✓' : '';
+            return el.value || '';
         };
 
-        const addSec = (title, fields) => {
-            if (yPos > pageHeight - 40) { doc.addPage(); yPos = 20; }
-            doc.setFontSize(12);
-            doc.setFont(undefined, 'bold');
-            doc.setTextColor(220, 15, 57);
-            doc.text(title, margin, yPos);
-            yPos += 8;
-            doc.setTextColor(76, 79, 105);
-            doc.setFontSize(10);
-            doc.setFont(undefined, 'normal');
-            fields.forEach(f => {
-                if (yPos > pageHeight - 20) { doc.addPage(); yPos = 20; }
-                if (f.value && f.value.trim()) {
-                    const label = f.label.endsWith(':') ? f.label.slice(0, -1) : f.label;
-                    doc.text(doc.splitTextToSize(`${label}: ${f.value}`, contentWidth), margin, yPos);
-                    yPos += 7;
-                }
-            });
-            yPos += 5;
+        // Collect all form data
+        const data = {
+            customer: getVal('customer'),
+            technicalContact: getVal('technicalContact'),
+            businessContact: getVal('businessContact'),
+            emailPhone: getVal('emailPhone'),
+            date: getVal('date'),
+            projectName: getVal('projectName'),
+            projectCode: getVal('projectCode'),
+            specialRequirements: getVal('specialRequirements')
         };
 
-        addSec(t('header.title'), [
-            { label: t('header.customer'), value: getVal('customer') },
-            { label: t('header.date'), value: getVal('date') },
-            { label: t('header.projectName'), value: getVal('projectName') }
-        ]);
+        // Collect table data
+        const loads = [];
+        document.querySelectorAll('#loadsTableBody tr').forEach((row, idx) => {
+            const inputs = row.querySelectorAll('input');
+            if (inputs.length > 0 && Array.from(inputs).some(i => i.value.trim())) {
+                loads.push({
+                    num: idx + 1,
+                    name: inputs[0]?.value || '',
+                    type: inputs[1]?.value || '',
+                    voltage: inputs[2]?.value || '',
+                    current: inputs[3]?.value || '',
+                    protection: inputs[4]?.value || '',
+                    control: inputs[5]?.value || '',
+                    cableLength: inputs[6]?.value || ''
+                });
+            }
+        });
 
-        addSec(t('section1.title'), [
-            { label: t('section1.ipRating'), value: getVal('ipRatingOther') },
-            { label: t('section1.temperature'), value: `${getVal('tempMin')} - ${getVal('tempMax')}` }
-        ]);
+        const ios = [];
+        document.querySelectorAll('#ioTableBody tr').forEach((row, idx) => {
+            const inputs = row.querySelectorAll('input');
+            if (inputs.length > 0 && Array.from(inputs).some(i => i.value.trim())) {
+                ios.push({
+                    num: idx + 1,
+                    name: inputs[0]?.value || '',
+                    io: inputs[1]?.value || '',
+                    ad: inputs[2]?.value || '',
+                    type: inputs[3]?.value || '',
+                    notes: inputs[4]?.value || ''
+                });
+            }
+        });
 
-        addSec(t('section9.title'), [
-            { label: t('section9.specialRequirements'), value: getVal('specialRequirements') }
-        ]);
+        // Generate HTML
+        const html = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Engineering Questionnaire - ${data.customer || 'Form'}</title>
+    <style>
+        @page { margin: 2cm; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.4; color: #333; }
+        .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #d20f39; }
+        .logo { max-width: 150px; margin-bottom: 10px; }
+        h1 { color: #d20f39; font-size: 20pt; margin-bottom: 10px; }
+        h2 { color: #d20f39; font-size: 14pt; margin: 25px 0 15px 0; padding-bottom: 5px; border-bottom: 2px solid #d20f39; }
+        .field { margin: 8px 0; display: flex; }
+        .field-label { font-weight: bold; min-width: 200px; }
+        .field-value { flex: 1; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #666; padding: 8px; text-align: left; }
+        th { background: #d20f39; color: white; font-weight: bold; }
+        tr:nth-child(even) { background: #f5f5f5; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #999; font-size: 9pt; text-align: center; color: #666; }
+        .page-break { page-break-after: always; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="${document.getElementById('logo')?.src || ''}" class="logo" alt="Logo">
+        <h1>${t('pageTitle')}</h1>
+        <p><strong>${new Date().toLocaleDateString()}</strong></p>
+    </div>
 
-        const totalPages = doc.internal.getNumberOfPages();
-        for (let i = 1; i <= totalPages; i++) {
-            doc.setPage(i);
-            doc.setFontSize(8);
-            doc.setTextColor(100);
-            doc.text(`${config.EMAIL || 'sales@schaltag.cz'} | Page ${i}/${totalPages}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
-        }
+    <h2>${t('header.title')}</h2>
+    ${data.customer ? `<div class="field"><span class="field-label">${t('header.customer')}</span><span class="field-value">${data.customer}</span></div>` : ''}
+    ${data.technicalContact ? `<div class="field"><span class="field-label">${t('header.technicalContact')}</span><span class="field-value">${data.technicalContact}</span></div>` : ''}
+    ${data.businessContact ? `<div class="field"><span class="field-label">${t('header.businessContact')}</span><span class="field-value">${data.businessContact}</span></div>` : ''}
+    ${data.emailPhone ? `<div class="field"><span class="field-label">${t('header.emailPhone')}</span><span class="field-value">${data.emailPhone}</span></div>` : ''}
+    ${data.date ? `<div class="field"><span class="field-label">${t('header.date')}</span><span class="field-value">${data.date}</span></div>` : ''}
+    ${data.projectName ? `<div class="field"><span class="field-label">${t('header.projectName')}</span><span class="field-value">${data.projectName}</span></div>` : ''}
+    ${data.projectCode ? `<div class="field"><span class="field-label">${t('header.projectCode')}</span><span class="field-value">${data.projectCode}</span></div>` : ''}
 
-        doc.save(`Questionnaire_${getVal('customer') || 'Form'}_${new Date().toISOString().split('T')[0]}.pdf`);
-        setTimeout(() => {
-            document.getElementById('loadingOverlay').classList.remove('active');
-            document.getElementById('successModal').classList.add('active');
-        }, 500);
+    ${loads.length > 0 ? `
+    <h2>${t('section4.loadsSubtitle')}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>${t('section4.loadsTable.name')}</th>
+                <th>${t('section4.loadsTable.type')}</th>
+                <th>${t('section4.loadsTable.voltage')}</th>
+                <th>${t('section4.loadsTable.current')}</th>
+                <th>${t('section4.loadsTable.protection')}</th>
+                <th>${t('section4.loadsTable.control')}</th>
+                <th>${t('section4.loadsTable.cableLength')}</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${loads.map(l => `<tr><td>${l.num}</td><td>${l.name}</td><td>${l.type}</td><td>${l.voltage}</td><td>${l.current}</td><td>${l.protection}</td><td>${l.control}</td><td>${l.cableLength}</td></tr>`).join('')}
+        </tbody>
+    </table>` : ''}
+
+    ${ios.length > 0 ? `
+    <h2>${t('section4.ioSubtitle')}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>${t('section4.ioTable.name')}</th>
+                <th>${t('section4.ioTable.io')}</th>
+                <th>${t('section4.ioTable.ad')}</th>
+                <th>${t('section4.ioTable.type')}</th>
+                <th>${t('section4.ioTable.notes')}</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${ios.map(i => `<tr><td>${i.num}</td><td>${i.name}</td><td>${i.io}</td><td>${i.ad}</td><td>${i.type}</td><td>${i.notes}</td></tr>`).join('')}
+        </tbody>
+    </table>` : ''}
+
+    ${data.specialRequirements ? `
+    <h2>${t('section9.title')}</h2>
+    <div class="field"><span class="field-label">${t('section9.specialRequirements')}</span></div>
+    <div style="margin-top:10px; white-space: pre-wrap;">${data.specialRequirements}</div>` : ''}
+
+    <div class="footer">
+        <p>${config.EMAIL || 'sales@schaltag.cz'} | ${config.PHONE || '+420 465 552 600'}</p>
+        <p>${config.ADDRESS || 'Moravská 1571, CZ - 562 01, Ústí nad Orlicí'}</p>
+    </div>
+</body>
+</html>`;
+
+        // Open print window
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(html);
+        printWindow.document.close();
+
+        // Wait for content to load then trigger print
+        printWindow.onload = () => {
+            setTimeout(() => {
+                printWindow.print();
+                document.getElementById('loadingOverlay').classList.remove('active');
+                document.getElementById('successModal').classList.add('active');
+            }, 250);
+        };
+
     } catch (error) {
         console.error('PDF error:', error);
-        alert('Error generating PDF');
+        alert('Error generating PDF. Please try again.');
         document.getElementById('loadingOverlay').classList.remove('active');
     }
 }
