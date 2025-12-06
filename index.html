@@ -78,7 +78,7 @@
                         <label data-i18n="section1.ipRating">Required IP rating:</label>
                         <div class="checkbox-group">
                             <label><input type="checkbox" name="ipRatingNone" data-section="section1"> <span data-i18n="section1.ipRatingNone">No requirement (standard)</span></label>
-                            <label><input type="text" name="ipRatingOther" placeholder="IP___" data-section="section1"></label>
+                            <label><input type="text" name="ipRatingOther" placeholder="IP54" data-section="section1"></label>
                         </div>
                     </div>
 
@@ -109,15 +109,15 @@
                     <div class="form-group">
                         <label data-i18n="section1.temperature">Ambient temperature:</label>
                         <div class="input-row">
-                            <input type="text" name="tempMin" placeholder="Min: ___ °C" data-section="section1">
-                            <input type="text" name="tempMax" placeholder="Max: ___ °C" data-section="section1">
+                            <input type="text" name="tempMin" placeholder="Min °C" data-section="section1">
+                            <input type="text" name="tempMax" placeholder="Max °C" data-section="section1">
                         </div>
                         <label><input type="checkbox" name="tempStandard" data-section="section1"> <span data-i18n="section1.tempStandard">No requirement - Standard (-5°C to +40°C)</span></label>
                     </div>
 
                     <div class="form-group">
                         <label data-i18n="section1.altitude">Altitude:</label>
-                        <input type="text" name="altitudeValue" placeholder="___ m a.s.l." data-section="section1">
+                        <input type="text" name="altitudeValue" placeholder="m a.s.l." data-section="section1">
                         <label><input type="checkbox" name="altitudeStandard" data-section="section1"> <span data-i18n="section1.altitudeStandard">No requirement - Standard (< 2000 m a.s.l.)</span></label>
                     </div>
                 </section>
@@ -134,7 +134,7 @@
                             <label><input type="checkbox" name="voltage230" data-section="section2"> <span data-i18n="section2.voltage230">1x 230 V AC / 50 Hz</span></label>
                             <label><input type="checkbox" name="voltage400" data-section="section2"> <span data-i18n="section2.voltage400">3x 400 V AC / 50 Hz</span></label>
                             <label><input type="checkbox" name="voltage480" data-section="section2"> <span data-i18n="section2.voltage480">3x 480 V AC / 60 Hz (USA)</span></label>
-                            <label><span data-i18n="section2.voltageDC">DC supply:</span> <input type="text" name="voltageDC" placeholder="___ V" data-section="section2"></label>
+                            <label><span data-i18n="section2.voltageDC">DC supply:</span> <input type="text" name="voltageDC" placeholder="V" data-section="section2"></label>
                             <label><span data-i18n="section2.voltageOther">Other:</span> <input type="text" name="voltageOther" data-section="section2"></label>
                         </div>
                     </div>
@@ -152,19 +152,19 @@
 
                     <div class="form-group">
                         <label data-i18n="section2.fuse">Source fuse:</label>
-                        <input type="text" name="fuseValue" placeholder="___ A" data-section="section2">
+                        <input type="text" name="fuseValue" placeholder="A" data-section="section2">
                     </div>
 
                     <div class="form-group">
                         <label data-i18n="section2.shortCircuit">Short-circuit current at installation point (Ik):</label>
-                        <input type="text" name="shortCircuitValue" placeholder="___ kA" data-section="section2">
+                        <input type="text" name="shortCircuitValue" placeholder="kA" data-section="section2">
                     </div>
 
                     <h3 data-i18n="section2.subtitle2">2.2 Supply to Cabinet</h3>
 
                     <div class="form-group">
                         <label data-i18n="section2.cableLength">Supply cable length:</label>
-                        <input type="text" name="cableLengthValue" placeholder="___ m" data-section="section2">
+                        <input type="text" name="cableLengthValue" placeholder="m" data-section="section2">
                     </div>
 
                     <div class="form-group">
@@ -208,7 +208,7 @@
 
                     <div class="form-group conditional-field" id="cableSectionGroup">
                         <label data-i18n="section2.cableSection">Supply cable cross-section:</label>
-                        <input type="text" name="cableSectionValue" placeholder="___ mm²" data-section="section2">
+                        <input type="text" name="cableSectionValue" placeholder="mm²" data-section="section2">
                     </div>
                 </section>
 
@@ -234,8 +234,8 @@
                         <label data-i18n="section3.safety">Functional safety:</label>
                         <div class="checkbox-group">
                             <label><input type="checkbox" name="safetyNo" data-section="section3"> <span data-i18n="section3.safetyNo">No</span></label>
-                            <label><span data-i18n="section3.safetySIL">Yes - SIL:</span> <input type="text" name="safetySIL" placeholder="___" data-section="section3"></label>
-                            <label><span data-i18n="section3.safetyPLr">Yes - PLr:</span> <input type="text" name="safetyPLr" placeholder="___" data-section="section3"></label>
+                            <label><input type="checkbox" name="safetySILCheck" data-section="section3"> <span data-i18n="section3.safetySIL">Yes - SIL:</span> <input type="text" name="safetySIL" data-section="section3"></label>
+                            <label><input type="checkbox" name="safetyPLrCheck" data-section="section3"> <span data-i18n="section3.safetyPLr">Yes - PLr:</span> <input type="text" name="safetyPLr" data-section="section3"></label>
                         </div>
                     </div>
 
@@ -257,7 +257,7 @@
                         <div class="checkbox-group">
                             <label><input type="checkbox" name="accessibilityFront" data-section="section3"> <span data-i18n="section3.accessibilityFront">Front side only accessible</span></label>
                             <label><input type="checkbox" name="accessibilityAll" data-section="section3"> <span data-i18n="section3.accessibilityAll">All sides accessible</span></label>
-                            <label><span data-i18n="section3.accessibilityLimited">Limited space (dimensions:</span> <input type="text" name="accessibilityLimited" placeholder="___" data-section="section3">)</label>
+                            <label><input type="checkbox" name="accessibilityLimitedCheck" data-section="section3"> <span data-i18n="section3.accessibilityLimited">Limited space (dimensions:</span> <input type="text" name="accessibilityLimited" placeholder="mm" data-section="section3">)</label>
                         </div>
                     </div>
 
@@ -278,8 +278,8 @@
                         <label data-i18n="section3.connectionType">Connection type:</label>
                         <div class="checkbox-group">
                             <label><input type="checkbox" name="connectionTypeTerminal" data-section="section3"> <span data-i18n="section3.connectionTypeTerminal">Terminal blocks</span></label>
-                            <label><span data-i18n="section3.connectionTypeConnectors">Connectors:</span> <input type="text" name="connectionTypeConnectors" data-section="section3"></label>
-                            <label><span data-i18n="section3.connectionTypeCombination">Combination:</span> <input type="text" name="connectionTypeCombination" data-section="section3"></label>
+                            <label><input type="checkbox" name="connectionTypeConnectorsCheck" data-section="section3"> <span data-i18n="section3.connectionTypeConnectors">Connectors:</span> <input type="text" name="connectionTypeConnectors" data-section="section3"></label>
+                            <label><input type="checkbox" name="connectionTypeCombinationCheck" data-section="section3"> <span data-i18n="section3.connectionTypeCombination">Combination:</span> <input type="text" name="connectionTypeCombination" data-section="section3"></label>
                             <label><input type="checkbox" name="connectionTypeNone" data-section="section3"> <span data-i18n="section3.connectionTypeNone">No requirement</span></label>
                         </div>
                     </div>
@@ -415,7 +415,7 @@
                     <div class="form-group">
                         <label data-i18n="section5.switch">Ethernet switch:</label>
                         <div class="checkbox-group">
-                            <label><span data-i18n="section5.switchYes">Yes - number of ports:</span> <input type="text" name="switchYes" placeholder="___" data-section="section5"></label>
+                            <label><input type="checkbox" name="switchYesCheck" data-section="section5"> <span data-i18n="section5.switchYes">Yes - number of ports:</span> <input type="text" name="switchYes" data-section="section5"></label>
                             <label><input type="checkbox" name="switchNo" data-section="section5"> <span data-i18n="section5.switchNo">No</span></label>
                             <label><input type="checkbox" name="switchNone" data-section="section5"> <span data-i18n="section5.switchNone">No requirement</span></label>
                         </div>
@@ -431,12 +431,12 @@
                     <div class="form-group">
                         <label data-i18n="section6.panelType">Panel type:</label>
                         <div class="checkbox-group">
-                            <label><span data-i18n="section6.panelTouch">Touch panel - size:</span> <input type="text" name="panelTouch" placeholder="___ inches" data-section="section6"></label>
+                            <label><input type="checkbox" name="panelTouchCheck" data-section="section6"> <span data-i18n="section6.panelTouch">Touch panel - size:</span> <input type="text" name="panelTouch" placeholder="inches" data-section="section6"></label>
                             <label><input type="checkbox" name="panelButton" data-section="section6"> <span data-i18n="section6.panelButton">Button panel</span></label>
                             <label><input type="checkbox" name="panelCombination" data-section="section6"> <span data-i18n="section6.panelCombination">Combination (Panel + buttons)</span></label>
                             <label><input type="checkbox" name="panelExternal" data-section="section6"> <span data-i18n="section6.panelExternal">No panel (external control)</span></label>
                             <label><input type="checkbox" name="panelNone" data-section="section6"> <span data-i18n="section6.panelNone">No requirement</span></label>
-                            <label><span data-i18n="section6.panelOther">Other:</span> <input type="text" name="panelOther" data-section="section6"></label>
+                            <label><input type="checkbox" name="panelOtherCheck" data-section="section6"> <span data-i18n="section6.panelOther">Other:</span> <input type="text" name="panelOther" data-section="section6"></label>
                         </div>
                     </div>
 
@@ -444,7 +444,7 @@
                         <label data-i18n="section6.location">HMI location:</label>
                         <div class="checkbox-group">
                             <label><input type="checkbox" name="locationDoor" data-section="section6"> <span data-i18n="section6.locationDoor">On cabinet door</span></label>
-                            <label><span data-i18n="section6.locationSeparate">Separate panel (cable length:</span> <input type="text" name="locationSeparate" placeholder="___ m" data-section="section6">)</label>
+                            <label><input type="checkbox" name="locationSeparateCheck" data-section="section6"> <span data-i18n="section6.locationSeparate">Separate panel (cable length:</span> <input type="text" name="locationSeparate" placeholder="m" data-section="section6">)</label>
                             <label><input type="checkbox" name="locationNone" data-section="section6"> <span data-i18n="section6.locationNone">No requirement</span></label>
                         </div>
                     </div>
@@ -456,8 +456,8 @@
                             <label><input type="checkbox" name="languageEN" data-section="section6"> <span data-i18n="section6.languageEN">English</span></label>
                             <label><input type="checkbox" name="languageDE" data-section="section6"> <span data-i18n="section6.languageDE">German</span></label>
                             <label><input type="checkbox" name="languageSymbols" data-section="section6"> <span data-i18n="section6.languageSymbols">Symbols only (no text)</span></label>
-                            <label><span data-i18n="section6.languageMultiple">Multiple languages:</span> <input type="text" name="languageMultiple" data-section="section6"></label>
-                            <label><span data-i18n="section6.languageOther">Other:</span> <input type="text" name="languageOther" data-section="section6"></label>
+                            <label><input type="checkbox" name="languageMultipleCheck" data-section="section6"> <span data-i18n="section6.languageMultiple">Multiple languages:</span> <input type="text" name="languageMultiple" data-section="section6"></label>
+                            <label><input type="checkbox" name="languageOtherCheck" data-section="section6"> <span data-i18n="section6.languageOther">Other:</span> <input type="text" name="languageOther" data-section="section6"></label>
                         </div>
                     </div>
                 </section>
@@ -471,15 +471,15 @@
                     <div class="form-group">
                         <label data-i18n="section7.dimensions">Required dimensions:</label>
                         <div>
-                            <input type="text" name="height" placeholder="Height: ___ mm" data-section="section7">
+                            <input type="text" name="height" placeholder="mm" data-section="section7">
                             <label><input type="checkbox" name="heightNone" data-section="section7"> <span data-i18n="section7.heightNone">No requirement</span></label>
                         </div>
                         <div>
-                            <input type="text" name="width" placeholder="Width: ___ mm" data-section="section7">
+                            <input type="text" name="width" placeholder="mm" data-section="section7">
                             <label><input type="checkbox" name="widthNone" data-section="section7"> <span data-i18n="section7.widthNone">No requirement</span></label>
                         </div>
                         <div>
-                            <input type="text" name="depth" placeholder="Depth: ___ mm" data-section="section7">
+                            <input type="text" name="depth" placeholder="mm" data-section="section7">
                             <label><input type="checkbox" name="depthNone" data-section="section7"> <span data-i18n="section7.depthNone">No requirement</span></label>
                         </div>
                     </div>
@@ -491,7 +491,7 @@
                         <div class="checkbox-group">
                             <label><input type="checkbox" name="colorRAL7035" data-section="section7"> <span data-i18n="section7.colorRAL7035">RAL 7035</span></label>
                             <label><input type="checkbox" name="colorRAL7032" data-section="section7"> <span data-i18n="section7.colorRAL7032">RAL 7032</span></label>
-                            <label><span data-i18n="section7.colorOther">Other RAL:</span> <input type="text" name="colorOther" placeholder="___" data-section="section7"></label>
+                            <label><input type="checkbox" name="colorOtherCheck" data-section="section7"> <span data-i18n="section7.colorOther">Other RAL:</span> <input type="text" name="colorOther" data-section="section7"></label>
                             <label><input type="checkbox" name="colorNone" data-section="section7"> <span data-i18n="section7.colorNone">No requirement</span></label>
                         </div>
                     </div>
@@ -512,7 +512,7 @@
                         <div class="checkbox-group">
                             <label><input type="checkbox" name="lockStandard" data-section="section7"> <span data-i18n="section7.lockStandard">Standard lock with key</span></label>
                             <label><input type="checkbox" name="lockNo" data-section="section7"> <span data-i18n="section7.lockNo">No lock</span></label>
-                            <label><span data-i18n="section7.lockOther">Other:</span> <input type="text" name="lockOther" data-section="section7"></label>
+                            <label><input type="checkbox" name="lockOtherCheck" data-section="section7"> <span data-i18n="section7.lockOther">Other:</span> <input type="text" name="lockOther" data-section="section7"></label>
                         </div>
                     </div>
                 </section>
