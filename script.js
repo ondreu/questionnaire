@@ -423,6 +423,175 @@ async function generatePDF() {
         ].filter(Boolean).join(', ') || '-'}</span></div>
         <div class="field"><span class="field-label">${t('section2.fuse')}</span><span class="field-value">${getVal('fuseValue') ? getVal('fuseValue') + ' A' : '-'}</span></div>
         <div class="field"><span class="field-label">${t('section2.shortCircuit')}</span><span class="field-value">${getVal('shortCircuitValue') ? getVal('shortCircuitValue') + ' kA' : '-'}</span></div>
+        <div class="field"><span class="field-label">${t('section2.cableLength')}</span><span class="field-value">${getVal('cableLengthValue') ? getVal('cableLengthValue') + ' m' : '-'}</span></div>
+        <div class="field"><span class="field-label">${t('section2.networkType')}</span><span class="field-value">${[
+            getVal('networkTNS') && t('section2.networkTNS'),
+            getVal('networkTNC') && t('section2.networkTNC'),
+            getVal('networkTT') && t('section2.networkTT'),
+            getVal('networkIT') && t('section2.networkIT'),
+            getVal('networkOther') && getVal('networkOther')
+        ].filter(Boolean).join(', ') || '-'}</span></div>
+
+        <h2>${t('section3.title')}</h2>
+        <div class="field"><span class="field-label">${t('section3.standard')}</span><span class="field-value">${[
+            getVal('standardCE') && t('section3.standardCE'),
+            getVal('standardUL') && t('section3.standardUL'),
+            getVal('standardNone') && t('section3.standardNone')
+        ].filter(Boolean).join(', ') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('section3.safety')}</span><span class="field-value">${
+            getVal('safetyNo') ? t('section3.safetyNo') : [
+                getVal('safetySIL') && `${t('section3.safetySIL')} ${getVal('safetySIL')}`,
+                getVal('safetyPLr') && `${t('section3.safetyPLr')} ${getVal('safetyPLr')}`
+            ].filter(Boolean).join(', ') || '-'
+        }</span></div>
+        <div class="field"><span class="field-label">${t('section3.installation')}</span><span class="field-value">${[
+            getVal('installationFloor') && t('section3.installationFloor'),
+            getVal('installationWall') && t('section3.installationWall'),
+            getVal('installationOther') && getVal('installationOther')
+        ].filter(Boolean).join(', ') || '-'}</span></div>
+
+        <h2>${t('section4.title')}</h2>
+        ${(() => {
+            const loads = [];
+            document.querySelectorAll('#loadsTableBody tr').forEach((row, idx) => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs.length > 0 && Array.from(inputs).some(i => i.value.trim())) {
+                    loads.push({
+                        num: idx + 1,
+                        name: inputs[0]?.value || '',
+                        type: inputs[1]?.value || '',
+                        voltage: inputs[2]?.value || '',
+                        current: inputs[3]?.value || '',
+                        protection: inputs[4]?.value || '',
+                        control: inputs[5]?.value || '',
+                        cableLength: inputs[6]?.value || ''
+                    });
+                }
+            });
+
+            const ios = [];
+            document.querySelectorAll('#ioTableBody tr').forEach((row, idx) => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs.length > 0 && Array.from(inputs).some(i => i.value.trim())) {
+                    ios.push({
+                        num: idx + 1,
+                        name: inputs[0]?.value || '',
+                        io: inputs[1]?.value || '',
+                        ad: inputs[2]?.value || '',
+                        type: inputs[3]?.value || '',
+                        notes: inputs[4]?.value || ''
+                    });
+                }
+            });
+
+            return `
+                ${loads.length > 0 ? `
+                <h3>${t('section4.loadsSubtitle')}</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>${t('section4.loadsTable.name')}</th>
+                            <th>${t('section4.loadsTable.type')}</th>
+                            <th>${t('section4.loadsTable.voltage')}</th>
+                            <th>${t('section4.loadsTable.current')}</th>
+                            <th>${t('section4.loadsTable.protection')}</th>
+                            <th>${t('section4.loadsTable.control')}</th>
+                            <th>${t('section4.loadsTable.cableLength')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${loads.map(l => `<tr><td>${l.num}</td><td>${l.name}</td><td>${l.type}</td><td>${l.voltage}</td><td>${l.current}</td><td>${l.protection}</td><td>${l.control}</td><td>${l.cableLength}</td></tr>`).join('')}
+                    </tbody>
+                </table>` : ''}
+
+                ${ios.length > 0 ? `
+                <h3>${t('section4.ioSubtitle')}</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>${t('section4.ioTable.name')}</th>
+                            <th>${t('section4.ioTable.io')}</th>
+                            <th>${t('section4.ioTable.ad')}</th>
+                            <th>${t('section4.ioTable.type')}</th>
+                            <th>${t('section4.ioTable.notes')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${ios.map(i => `<tr><td>${i.num}</td><td>${i.name}</td><td>${i.io}</td><td>${i.ad}</td><td>${i.type}</td><td>${i.notes}</td></tr>`).join('')}
+                    </tbody>
+                </table>` : ''}
+            `;
+        })()}
+
+        <h2>${t('section5.title')}</h2>
+        <div class="field"><span class="field-label">${t('section5.fieldbus')}</span><span class="field-value">${[
+            getVal('fieldbusEthernetIP') && t('section5.fieldbusEthernetIP'),
+            getVal('fieldbusProfinetIO') && t('section5.fieldbusProfinetIO'),
+            getVal('fieldbusModbusTCP') && t('section5.fieldbusModbusTCP'),
+            getVal('fieldbusEtherCAT') && t('section5.fieldbusEtherCAT'),
+            getVal('fieldbusNone') && t('section5.fieldbusNone'),
+            getVal('fieldbusOther') && getVal('fieldbusOther')
+        ].filter(Boolean).join(', ') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('section5.switch')}</span><span class="field-value">${
+            getVal('switchYes') ? `${t('section5.switchYes')} ${getVal('switchYes')}` :
+            (getVal('switchNo') ? t('section5.switchNo') : (getVal('switchNone') ? t('section5.switchNone') : '-'))
+        }</span></div>
+
+        <h2>${t('section6.title')}</h2>
+        <div class="field"><span class="field-label">${t('section6.panelType')}</span><span class="field-value">${[
+            getVal('panelTouch') && `${t('section6.panelTouch')} ${getVal('panelTouch')} inches`,
+            getVal('panelButton') && t('section6.panelButton'),
+            getVal('panelCombination') && t('section6.panelCombination'),
+            getVal('panelExternal') && t('section6.panelExternal'),
+            getVal('panelNone') && t('section6.panelNone'),
+            getVal('panelOther') && getVal('panelOther')
+        ].filter(Boolean).join(', ') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('section6.location')}</span><span class="field-value">${[
+            getVal('locationDoor') && t('section6.locationDoor'),
+            getVal('locationSeparate') && `${t('section6.locationSeparate')} ${getVal('locationSeparate')} m`,
+            getVal('locationNone') && t('section6.locationNone')
+        ].filter(Boolean).join(', ') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('section6.language')}</span><span class="field-value">${[
+            getVal('languageCZ') && t('section6.languageCZ'),
+            getVal('languageEN') && t('section6.languageEN'),
+            getVal('languageDE') && t('section6.languageDE'),
+            getVal('languageSymbols') && t('section6.languageSymbols'),
+            getVal('languageMultiple') && getVal('languageMultiple'),
+            getVal('languageOther') && getVal('languageOther')
+        ].filter(Boolean).join(', ') || '-'}</span></div>
+
+        <h2>${t('section7.title')}</h2>
+        <div class="field"><span class="field-label">${t('section7.dimensions')}</span><span class="field-value">${
+            (getVal('heightNone') && getVal('widthNone') && getVal('depthNone')) ? t('section7.heightNone') :
+            `H: ${getVal('height') || '-'} mm, W: ${getVal('width') || '-'} mm, D: ${getVal('depth') || '-'} mm`
+        }</span></div>
+        <div class="field"><span class="field-label">${t('section7.color')}</span><span class="field-value">${[
+            getVal('colorRAL7035') && t('section7.colorRAL7035'),
+            getVal('colorRAL7032') && t('section7.colorRAL7032'),
+            getVal('colorOther') && `${t('section7.colorOther')} ${getVal('colorOther')}`,
+            getVal('colorNone') && t('section7.colorNone')
+        ].filter(Boolean).join(', ') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('section7.doorType')}</span><span class="field-value">${[
+            getVal('doorSingle') && t('section7.doorSingle'),
+            getVal('doorDouble') && t('section7.doorDouble')
+        ].filter(Boolean).join(', ') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('section7.lock')}</span><span class="field-value">${[
+            getVal('lockStandard') && t('section7.lockStandard'),
+            getVal('lockNo') && t('section7.lockNo'),
+            getVal('lockOther') && getVal('lockOther')
+        ].filter(Boolean).join(', ') || '-'}</span></div>
+
+        <h2>${t('section8.title')}</h2>
+        <div class="field"><span class="field-label">${t('section8.plcBrand')}</span><span class="field-value">${[
+            getVal('plcSiemens') && t('section8.plcSiemens'),
+            getVal('plcRockwell') && t('section8.plcRockwell'),
+            getVal('plcSchneider') && t('section8.plcSchneider'),
+            getVal('plcOmron') && t('section8.plcOmron'),
+            getVal('plcNone') && t('section8.plcNone'),
+            getVal('plcOther') && getVal('plcOther')
+        ].filter(Boolean).join(', ') || '-'}</span></div>
 
         ${getVal('specialRequirements') ? `
         <h2>${t('section9.title')}</h2>
