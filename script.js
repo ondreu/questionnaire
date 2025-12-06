@@ -391,6 +391,11 @@ async function generatePDF() {
                 return el.value || '';
             };
 
+            // Helper to clean placeholder patterns from labels
+            const cleanLabel = (text) => {
+                return text.replace(/___\s*(inches|mm²?|m|cm|A|kA|V|°C|a\.s\.l\.|ports)?/g, '').trim();
+            };
+
             // Collect all form fields with their labels
             return `
     <div class="questionnaire-page">
@@ -419,7 +424,7 @@ async function generatePDF() {
             getVal('voltage230') && t('section2.voltage230'),
             getVal('voltage400') && t('section2.voltage400'),
             getVal('voltage480') && t('section2.voltage480'),
-            getVal('voltageDC') && `${t('section2.voltageDC')} ${getVal('voltageDC')} V`
+            getVal('voltageDC') && `${cleanLabel(t('section2.voltageDC'))} ${getVal('voltageDC')} V`
         ].filter(Boolean).join(', ') || '-'}</span></div>
         <div class="field"><span class="field-label">${t('section2.fuse')}</span><span class="field-value">${getVal('fuseValue') ? getVal('fuseValue') + ' A' : '-'}</span></div>
         <div class="field"><span class="field-label">${t('section2.shortCircuit')}</span><span class="field-value">${getVal('shortCircuitValue') ? getVal('shortCircuitValue') + ' kA' : '-'}</span></div>
@@ -440,8 +445,8 @@ async function generatePDF() {
         ].filter(Boolean).join(', ') || '-'}</span></div>
         <div class="field"><span class="field-label">${t('section3.safety')}</span><span class="field-value">${
             getVal('safetyNo') ? t('section3.safetyNo') : [
-                getVal('safetySIL') && `${t('section3.safetySIL')} ${getVal('safetySIL')}`,
-                getVal('safetyPLr') && `${t('section3.safetyPLr')} ${getVal('safetyPLr')}`
+                getVal('safetySIL') && `${cleanLabel(t('section3.safetySIL'))} ${getVal('safetySIL')}`,
+                getVal('safetyPLr') && `${cleanLabel(t('section3.safetyPLr'))} ${getVal('safetyPLr')}`
             ].filter(Boolean).join(', ') || '-'
         }</span></div>
         <div class="field"><span class="field-label">${t('section3.installation')}</span><span class="field-value">${[
@@ -535,13 +540,13 @@ async function generatePDF() {
             getVal('fieldbusOther') && getVal('fieldbusOther')
         ].filter(Boolean).join(', ') || '-'}</span></div>
         <div class="field"><span class="field-label">${t('section5.switch')}</span><span class="field-value">${
-            getVal('switchYes') ? `${t('section5.switchYes')} ${getVal('switchYes')}` :
+            getVal('switchYes') ? `${cleanLabel(t('section5.switchYes'))} ${getVal('switchYes')}` :
             (getVal('switchNo') ? t('section5.switchNo') : (getVal('switchNone') ? t('section5.switchNone') : '-'))
         }</span></div>
 
         <h2>${t('section6.title')}</h2>
         <div class="field"><span class="field-label">${t('section6.panelType')}</span><span class="field-value">${[
-            getVal('panelTouch') && `${t('section6.panelTouch')} ${getVal('panelTouch')} inches`,
+            getVal('panelTouch') && `${cleanLabel(t('section6.panelTouch'))} ${getVal('panelTouch')} inches`,
             getVal('panelButton') && t('section6.panelButton'),
             getVal('panelCombination') && t('section6.panelCombination'),
             getVal('panelExternal') && t('section6.panelExternal'),
@@ -550,7 +555,7 @@ async function generatePDF() {
         ].filter(Boolean).join(', ') || '-'}</span></div>
         <div class="field"><span class="field-label">${t('section6.location')}</span><span class="field-value">${[
             getVal('locationDoor') && t('section6.locationDoor'),
-            getVal('locationSeparate') && `${t('section6.locationSeparate')} ${getVal('locationSeparate')} m`,
+            getVal('locationSeparate') && `${cleanLabel(t('section6.locationSeparate'))} ${getVal('locationSeparate')} m`,
             getVal('locationNone') && t('section6.locationNone')
         ].filter(Boolean).join(', ') || '-'}</span></div>
         <div class="field"><span class="field-label">${t('section6.language')}</span><span class="field-value">${[
@@ -570,7 +575,7 @@ async function generatePDF() {
         <div class="field"><span class="field-label">${t('section7.color')}</span><span class="field-value">${[
             getVal('colorRAL7035') && t('section7.colorRAL7035'),
             getVal('colorRAL7032') && t('section7.colorRAL7032'),
-            getVal('colorOther') && `${t('section7.colorOther')} ${getVal('colorOther')}`,
+            getVal('colorOther') && `${cleanLabel(t('section7.colorOther'))} ${getVal('colorOther')}`,
             getVal('colorNone') && t('section7.colorNone')
         ].filter(Boolean).join(', ') || '-'}</span></div>
         <div class="field"><span class="field-label">${t('section7.doorType')}</span><span class="field-value">${[
