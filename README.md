@@ -308,19 +308,3 @@ function validateEmail(email) {
 - **No External Requests**: Except for loading external libraries (jsPDF from CDN)
 - **PDF Generated Locally**: No data sent to external services
 
-## License
-
-This project is created for Schaltag. All rights reserved.
-
-## Support
-
-For questions or issues:
-
-📧 Email: sales@schaltag.cz
-📞 Phone: +420 465 552 600
-📍 Address: Moravská 1571, CZ - 562 01, Ústí nad Orlicí
-
----
-
-**Last Updated**: 2025-12-06
-**Version**: 1.0.0
