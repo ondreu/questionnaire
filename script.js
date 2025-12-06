@@ -257,6 +257,9 @@ function initializeEventListeners() {
     // Download PDF button
     document.getElementById('downloadPDF').addEventListener('click', generatePDF);
 
+    // Send Email button
+    document.getElementById('sendEmail').addEventListener('click', sendEmail);
+
     // Close modal
     document.getElementById('closeModal').addEventListener('click', () => {
         document.getElementById('successModal').classList.remove('active');
@@ -666,4 +669,32 @@ async function generatePDF() {
         alert('Error generating PDF. Please try again.');
         document.getElementById('loadingOverlay').classList.remove('active');
     }
+}
+
+// Send email with pre-filled information
+function sendEmail() {
+    const t = translations[currentLanguage];
+
+    // Get form data
+    const projectName = document.querySelector('[name="projectName"]')?.value || '-';
+    const customer = document.querySelector('[name="customer"]')?.value || '-';
+    const date = document.querySelector('[name="date"]')?.value || new Date().toLocaleDateString();
+
+    // Build email subject
+    const subject = t.emailSubject || 'Engineering Questionnaire';
+
+    // Build email body with placeholders replaced
+    let body = t.emailBody || 'Please find attached the completed engineering questionnaire.';
+    body = body.replace('{projectName}', projectName);
+    body = body.replace('{customer}', customer);
+    body = body.replace('{date}', date);
+
+    // Get recipient email from config
+    const recipient = config.EMAIL || 'sales@schaltag.cz';
+
+    // Create mailto link
+    const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    // Open email client
+    window.location.href = mailtoLink;
 }

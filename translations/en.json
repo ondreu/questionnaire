@@ -1,6 +1,9 @@
 {
   "pageTitle": "Engineering Questionnaire",
   "downloadPdf": "Download PDF",
+  "sendEmail": "Send via Email",
+  "emailSubject": "Engineering Questionnaire",
+  "emailBody": "Dear Schaltag team,\n\nPlease find attached the completed engineering questionnaire.\n\nProject: {projectName}\nCustomer: {customer}\nDate: {date}\n\nBest regards",
   "instructions": "Instructions:",
   "instructionsText": "Please send the completed questionnaire to:",
   "contact": "Contact:",

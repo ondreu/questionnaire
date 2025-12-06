@@ -1,6 +1,9 @@
 {
   "pageTitle": "Engineering-Fragebogen",
   "downloadPdf": "PDF Herunterladen",
+  "sendEmail": "Per E-Mail senden",
+  "emailSubject": "Engineering-Fragebogen",
+  "emailBody": "Sehr geehrtes Schaltag-Team,\n\nanbei finden Sie den ausgefüllten Engineering-Fragebogen.\n\nProjekt: {projectName}\nKunde: {customer}\nDatum: {date}\n\nMit freundlichen Grüßen",
   "instructions": "Anweisungen:",
   "instructionsText": "Bitte senden Sie den ausgefüllten Fragebogen an:",
   "contact": "Kontakt:",

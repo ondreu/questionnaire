@@ -1,6 +1,9 @@
 {
   "pageTitle": "Engineering Dotazník",
   "downloadPdf": "Stáhnout PDF",
+  "sendEmail": "Odeslat emailem",
+  "emailSubject": "Engineering dotazník",
+  "emailBody": "Dobrý den,\n\npřiložený dokument obsahuje vyplněný engineering dotazník.\n\nProjekt: {projectName}\nZákazník: {customer}\nDatum: {date}\n\nS pozdravem",
   "instructions": "Instrukce:",
   "instructionsText": "Prosím odešlete vyplněný dotazník na:",
   "contact": "Kontakt:",

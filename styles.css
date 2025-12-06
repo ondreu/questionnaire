@@ -420,6 +420,10 @@ h1 {
 .download-section {
     text-align: center;
     margin: 3rem 0 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 /* Buttons */
@@ -443,6 +447,30 @@ h1 {
 }
 
 .btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    padding: 1rem 2.5rem;
+    background-color: var(--surface0);
+    color: var(--text);
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary:hover {
+    background-color: var(--accent);
+    color: var(--base);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn-secondary:active {
     transform: translateY(0);
 }
 
