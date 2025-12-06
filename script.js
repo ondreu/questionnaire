@@ -381,110 +381,72 @@ async function generatePDF() {
     document.getElementById('loadingOverlay').classList.add('active');
 
     try {
-        // Bilingual translation helper: shows current language + Czech
-        const t = (key) => {
-            const currentTrans = getNestedTranslation(translations[currentLanguage], key) || key;
-            if (currentLanguage === 'cz') {
-                return currentTrans; // If already Czech, show only Czech
-            }
-            const czechTrans = getNestedTranslation(translations['cz'], key) || '';
-            return czechTrans ? `${currentTrans} / ${czechTrans}` : currentTrans;
+        // Helper function to generate complete questionnaire in specific language
+        const generateQuestionnaireHTML = (lang) => {
+            const t = (key) => getNestedTranslation(translations[lang], key) || key;
+            const getVal = (name) => {
+                const el = document.querySelector(`[name="${name}"]`);
+                if (!el) return '';
+                if (el.type === 'checkbox') return el.checked ? '✓' : '';
+                return el.value || '';
+            };
+
+            // Collect all form fields with their labels
+            return `
+    <div class="questionnaire-page">
+        <div class="header">
+            <img src="${document.getElementById('logo')?.src || ''}" class="logo" alt="Logo">
+            <h1>${t('pageTitle')}</h1>
+            <p><strong>${new Date().toLocaleDateString()}</strong></p>
+        </div>
+
+        <h2>${t('header.title')}</h2>
+        <div class="field"><span class="field-label">${t('header.customer')}</span><span class="field-value">${getVal('customer') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('header.technicalContact')}</span><span class="field-value">${getVal('technicalContact') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('header.businessContact')}</span><span class="field-value">${getVal('businessContact') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('header.emailPhone')}</span><span class="field-value">${getVal('emailPhone') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('header.date')}</span><span class="field-value">${getVal('date') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('header.projectName')}</span><span class="field-value">${getVal('projectName') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('header.projectCode')}</span><span class="field-value">${getVal('projectCode') || '-'}</span></div>
+
+        <h2>${t('section1.title')}</h2>
+        <div class="field"><span class="field-label">${t('section1.ipRating')}</span><span class="field-value">${getVal('ipRatingNone') ? t('section1.ipRatingNone') : (getVal('ipRatingOther') || '-')}</span></div>
+        <div class="field"><span class="field-label">${t('section1.temperature')}</span><span class="field-value">${getVal('tempStandard') ? t('section1.tempStandard') : ((getVal('tempMin') || getVal('tempMax')) ? `${getVal('tempMin') || '-'} to ${getVal('tempMax') || '-'} °C` : '-')}</span></div>
+        <div class="field"><span class="field-label">${t('section1.altitude')}</span><span class="field-value">${getVal('altitudeStandard') ? t('section1.altitudeStandard') : (getVal('altitudeValue') ? getVal('altitudeValue') + ' m a.s.l.' : '-')}</span></div>
+
+        <h2>${t('section2.title')}</h2>
+        <div class="field"><span class="field-label">${t('section2.voltage')}</span><span class="field-value">${[
+            getVal('voltage230') && t('section2.voltage230'),
+            getVal('voltage400') && t('section2.voltage400'),
+            getVal('voltage480') && t('section2.voltage480'),
+            getVal('voltageDC') && `${t('section2.voltageDC')} ${getVal('voltageDC')} V`
+        ].filter(Boolean).join(', ') || '-'}</span></div>
+        <div class="field"><span class="field-label">${t('section2.fuse')}</span><span class="field-value">${getVal('fuseValue') ? getVal('fuseValue') + ' A' : '-'}</span></div>
+        <div class="field"><span class="field-label">${t('section2.shortCircuit')}</span><span class="field-value">${getVal('shortCircuitValue') ? getVal('shortCircuitValue') + ' kA' : '-'}</span></div>
+
+        ${getVal('specialRequirements') ? `
+        <h2>${t('section9.title')}</h2>
+        <div class="field"><span class="field-label">${t('section9.specialRequirements')}</span></div>
+        <div style="margin-top:10px; white-space: pre-wrap;">${getVal('specialRequirements')}</div>` : ''}
+
+        <div class="footer">
+            <p>${config.EMAIL || 'sales@schaltag.cz'} | ${config.PHONE || '+420 465 552 600'}</p>
+            <p>${config.ADDRESS || 'Moravská 1571, CZ - 562 01, Ústí nad Orlicí'}</p>
+        </div>
+    </div>`;
         };
 
-        const getVal = (name) => {
-            const el = document.querySelector(`[name="${name}"]`);
-            if (!el) return '';
-            if (el.type === 'checkbox') return el.checked ? '✓' : '';
-            return el.value || '';
-        };
+        // Generate TWO questionnaires - selected language + Czech
+        const questionnaire1 = generateQuestionnaireHTML(currentLanguage);
+        const questionnaire2 = currentLanguage !== 'cz' ? generateQuestionnaireHTML('cz') : '';
 
-        // Helper to collect checked checkboxes and associated text inputs from a section
-        const collectSection = (sectionAttr) => {
-            const items = [];
-            const elements = document.querySelectorAll(`[data-section="${sectionAttr}"]`);
-
-            elements.forEach(el => {
-                if (el.type === 'checkbox' && el.checked) {
-                    const label = el.closest('label');
-                    if (label) {
-                        const spanText = label.querySelector('span')?.textContent || '';
-                        const textInput = label.querySelector('input[type="text"]');
-                        if (textInput && textInput.value.trim()) {
-                            items.push(`${spanText} ${textInput.value}`);
-                        } else if (spanText) {
-                            items.push(spanText);
-                        }
-                    }
-                } else if ((el.type === 'text' || el.tagName === 'TEXTAREA') && el.value.trim() && !el.closest('label')?.querySelector('input[type="checkbox"]')) {
-                    // Standalone text inputs (not part of checkbox labels)
-                    const label = el.closest('.form-group')?.querySelector('label')?.textContent || el.name;
-                    items.push(`${label}: ${el.value}`);
-                }
-            });
-
-            return items;
-        };
-
-        // Collect all form data
-        const data = {
-            customer: getVal('customer'),
-            technicalContact: getVal('technicalContact'),
-            businessContact: getVal('businessContact'),
-            emailPhone: getVal('emailPhone'),
-            date: getVal('date'),
-            projectName: getVal('projectName'),
-            projectCode: getVal('projectCode'),
-            specialRequirements: getVal('specialRequirements'),
-            section1: collectSection('section1'),
-            section2: collectSection('section2'),
-            section3: collectSection('section3'),
-            section5: collectSection('section5'),
-            section6: collectSection('section6'),
-            section7: collectSection('section7'),
-            section8: collectSection('section8'),
-            section9: collectSection('section9')
-        };
-
-        // Collect table data
-        const loads = [];
-        document.querySelectorAll('#loadsTableBody tr').forEach((row, idx) => {
-            const inputs = row.querySelectorAll('input');
-            if (inputs.length > 0 && Array.from(inputs).some(i => i.value.trim())) {
-                loads.push({
-                    num: idx + 1,
-                    name: inputs[0]?.value || '',
-                    type: inputs[1]?.value || '',
-                    voltage: inputs[2]?.value || '',
-                    current: inputs[3]?.value || '',
-                    protection: inputs[4]?.value || '',
-                    control: inputs[5]?.value || '',
-                    cableLength: inputs[6]?.value || ''
-                });
-            }
-        });
-
-        const ios = [];
-        document.querySelectorAll('#ioTableBody tr').forEach((row, idx) => {
-            const inputs = row.querySelectorAll('input');
-            if (inputs.length > 0 && Array.from(inputs).some(i => i.value.trim())) {
-                ios.push({
-                    num: idx + 1,
-                    name: inputs[0]?.value || '',
-                    io: inputs[1]?.value || '',
-                    ad: inputs[2]?.value || '',
-                    type: inputs[3]?.value || '',
-                    notes: inputs[4]?.value || ''
-                });
-            }
-        });
-
-        // Generate HTML
+        // Combine into single HTML
         const html = `
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Engineering Questionnaire - ${data.customer || 'Form'}</title>
+    <title>Engineering Questionnaire</title>
     <style>
         @page { margin: 2cm; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -494,107 +456,20 @@ async function generatePDF() {
         h1 { color: #d20f39; font-size: 18pt; margin-bottom: 10px; }
         h2 { color: #d20f39; font-size: 12pt; margin: 20px 0 12px 0; padding-bottom: 5px; border-bottom: 2px solid #d20f39; }
         .field { margin: 6px 0; display: flex; }
-        .field-label { font-weight: bold; min-width: 250px; font-size: 9pt; }
+        .field-label { font-weight: bold; min-width: 200px; font-size: 9pt; }
         .field-value { flex: 1; }
         table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 9pt; }
         th, td { border: 1px solid #666; padding: 6px; text-align: left; }
         th { background: #d20f39; color: white; font-weight: bold; font-size: 8pt; }
         tr:nth-child(even) { background: #f5f5f5; }
         .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #999; font-size: 9pt; text-align: center; color: #666; }
-        .page-break { page-break-after: always; }
+        .questionnaire-page { page-break-after: always; }
+        .questionnaire-page:last-child { page-break-after: auto; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="${document.getElementById('logo')?.src || ''}" class="logo" alt="Logo">
-        <h1>${t('pageTitle')}</h1>
-        <p><strong>${new Date().toLocaleDateString()}</strong></p>
-    </div>
-
-    <h2>${t('header.title')}</h2>
-    ${data.customer ? `<div class="field"><span class="field-label">${t('header.customer')}</span><span class="field-value">${data.customer}</span></div>` : ''}
-    ${data.technicalContact ? `<div class="field"><span class="field-label">${t('header.technicalContact')}</span><span class="field-value">${data.technicalContact}</span></div>` : ''}
-    ${data.businessContact ? `<div class="field"><span class="field-label">${t('header.businessContact')}</span><span class="field-value">${data.businessContact}</span></div>` : ''}
-    ${data.emailPhone ? `<div class="field"><span class="field-label">${t('header.emailPhone')}</span><span class="field-value">${data.emailPhone}</span></div>` : ''}
-    ${data.date ? `<div class="field"><span class="field-label">${t('header.date')}</span><span class="field-value">${data.date}</span></div>` : ''}
-    ${data.projectName ? `<div class="field"><span class="field-label">${t('header.projectName')}</span><span class="field-value">${data.projectName}</span></div>` : ''}
-    ${data.projectCode ? `<div class="field"><span class="field-label">${t('header.projectCode')}</span><span class="field-value">${data.projectCode}</span></div>` : ''}
-
-    ${data.section1 && data.section1.length > 0 ? `
-    <h2>${t('section1.title')}</h2>
-    ${data.section1.map(item => `<div class="field"><span class="field-value">• ${item}</span></div>`).join('')}` : ''}
-
-    ${data.section2 && data.section2.length > 0 ? `
-    <h2>${t('section2.title')}</h2>
-    ${data.section2.map(item => `<div class="field"><span class="field-value">• ${item}</span></div>`).join('')}` : ''}
-
-    ${data.section3 && data.section3.length > 0 ? `
-    <h2>${t('section3.title')}</h2>
-    ${data.section3.map(item => `<div class="field"><span class="field-value">• ${item}</span></div>`).join('')}` : ''}
-
-    ${loads.length > 0 ? `
-    <h2>${t('section4.loadsSubtitle')}</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>${t('section4.loadsTable.name')}</th>
-                <th>${t('section4.loadsTable.type')}</th>
-                <th>${t('section4.loadsTable.voltage')}</th>
-                <th>${t('section4.loadsTable.current')}</th>
-                <th>${t('section4.loadsTable.protection')}</th>
-                <th>${t('section4.loadsTable.control')}</th>
-                <th>${t('section4.loadsTable.cableLength')}</th>
-            </tr>
-        </thead>
-        <tbody>
-            ${loads.map(l => `<tr><td>${l.num}</td><td>${l.name}</td><td>${l.type}</td><td>${l.voltage}</td><td>${l.current}</td><td>${l.protection}</td><td>${l.control}</td><td>${l.cableLength}</td></tr>`).join('')}
-        </tbody>
-    </table>` : ''}
-
-    ${ios.length > 0 ? `
-    <h2>${t('section4.ioSubtitle')}</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>${t('section4.ioTable.name')}</th>
-                <th>${t('section4.ioTable.io')}</th>
-                <th>${t('section4.ioTable.ad')}</th>
-                <th>${t('section4.ioTable.type')}</th>
-                <th>${t('section4.ioTable.notes')}</th>
-            </tr>
-        </thead>
-        <tbody>
-            ${ios.map(i => `<tr><td>${i.num}</td><td>${i.name}</td><td>${i.io}</td><td>${i.ad}</td><td>${i.type}</td><td>${i.notes}</td></tr>`).join('')}
-        </tbody>
-    </table>` : ''}
-
-    ${data.section5 && data.section5.length > 0 ? `
-    <h2>${t('section5.title')}</h2>
-    ${data.section5.map(item => `<div class="field"><span class="field-value">• ${item}</span></div>`).join('')}` : ''}
-
-    ${data.section6 && data.section6.length > 0 ? `
-    <h2>${t('section6.title')}</h2>
-    ${data.section6.map(item => `<div class="field"><span class="field-value">• ${item}</span></div>`).join('')}` : ''}
-
-    ${data.section7 && data.section7.length > 0 ? `
-    <h2>${t('section7.title')}</h2>
-    ${data.section7.map(item => `<div class="field"><span class="field-value">• ${item}</span></div>`).join('')}` : ''}
-
-    ${data.section8 && data.section8.length > 0 ? `
-    <h2>${t('section8.title')}</h2>
-    ${data.section8.map(item => `<div class="field"><span class="field-value">• ${item}</span></div>`).join('')}` : ''}
-
-    ${data.specialRequirements ? `
-    <h2>${t('section9.title')}</h2>
-    <div class="field"><span class="field-label">${t('section9.specialRequirements')}</span></div>
-    <div style="margin-top:10px; white-space: pre-wrap;">${data.specialRequirements}</div>` : ''}
-
-    <div class="footer">
-        <p>${config.EMAIL || 'sales@schaltag.cz'} | ${config.PHONE || '+420 465 552 600'}</p>
-        <p>${config.ADDRESS || 'Moravská 1571, CZ - 562 01, Ústí nad Orlicí'}</p>
-    </div>
+    ${questionnaire1}
+    ${questionnaire2}
 </body>
 </html>`;
 
