@@ -89,7 +89,7 @@
     "connectionMethodNone": "Aucune exigence",
     "connectionMethodOther": "Autre:",
     "cableSupplied": "Le câble sera inclus dans la livraison:",
-    "cableSuppliedYes": "Oui - vous pouvez ignorer les 2 dernières questions",
+    "cableSuppliedYes": "Oui",
     "cableSuppliedNo": "Non",
     "cableMaterial": "Matériau du câble:",
     "cableMaterialCu": "Cu (cuivre)",
@@ -126,7 +126,7 @@
     "accessibilityLimited": "Espace limité (dimensions: ___)",
     "subtitle3": "3.3 Connexions de l'Armoire",
     "cableEntries": "Entrées/sorties de câbles:",
-    "cableEntriesBottom": "Par le bas (chemin de câbles)",
+    "cableEntriesBottom": "Par le bas",
     "cableEntriesTop": "Par le haut",
     "cableEntriesSide": "Par le côté",
     "cableEntriesCombination": "Combinaison",
@@ -285,10 +285,6 @@
   "section9": {
     "title": "9. REMARQUES ET PIÈCES JOINTES",
     "specialRequirements": "Exigences spéciales:",
-    "attachments": "Documents joints:",
-    "attachmentSchema": "Schéma existant:",
-    "attachmentPhotos": "Photos:",
-    "attachmentDatasheets": "Fiches techniques:",
-    "attachmentOther": "Autre:"
+    "attachmentsNote": "Veuillez joindre les documents existants tels que : schémas, listes de câbles, listes d'E/S, photos, modèles 3D, etc. par e-mail, partager via votre propre stockage cloud, ou demander un lien de stockage cloud Schaltag pour télécharger des documents."
   }
 }

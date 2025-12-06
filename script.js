@@ -4,6 +4,8 @@ let translations = {};
 let config = {};
 let formData = {};
 let autoSaveInterval;
+let saveDebounceTimer;
+let lastSaveTime = 0;
 
 // Initialize app on DOM load
 document.addEventListener('DOMContentLoaded', async () => {
@@ -35,8 +37,12 @@ async function loadConfig() {
 
         // Update contact information in footer and modal
         if (config.EMAIL) {
-            document.getElementById('footer-email').textContent = `📧 ${config.EMAIL}`;
-            document.getElementById('modal-email').textContent = `📧 ${config.EMAIL}`;
+            const footerEmail = document.getElementById('footer-email');
+            const modalEmail = document.getElementById('modal-email');
+            footerEmail.textContent = config.EMAIL;
+            footerEmail.href = `mailto:${config.EMAIL}`;
+            modalEmail.textContent = config.EMAIL;
+            modalEmail.href = `mailto:${config.EMAIL}`;
         }
         if (config.PHONE) {
             document.getElementById('footer-phone').textContent = `📞 ${config.PHONE}`;
@@ -187,7 +193,7 @@ function addTableRow(tableType, index) {
     // Add event listeners to inputs for auto-save and row addition
     row.querySelectorAll('input').forEach(input => {
         input.addEventListener('input', () => {
-            saveFormData();
+            debouncedSave();
             updateProgress();
             checkAndAddTableRow(tableType);
         });
@@ -235,7 +241,7 @@ function initializeEventListeners() {
                 cableMaterialGroup.classList.remove('visible');
                 cableSectionGroup.classList.remove('visible');
             }
-            saveFormData();
+            debouncedSave();
         });
 
         cableSuppliedNo.addEventListener('change', function() {
@@ -244,7 +250,7 @@ function initializeEventListeners() {
                 cableMaterialGroup.classList.add('visible');
                 cableSectionGroup.classList.add('visible');
             }
-            saveFormData();
+            debouncedSave();
         });
     }
 
@@ -259,11 +265,11 @@ function initializeEventListeners() {
     // Form change listeners for auto-save and progress
     document.querySelectorAll('input, textarea, select').forEach(element => {
         element.addEventListener('input', () => {
-            saveFormData();
+            debouncedSave();
             updateProgress();
         });
         element.addEventListener('change', () => {
-            saveFormData();
+            debouncedSave();
             updateProgress();
         });
     });
@@ -281,12 +287,12 @@ function initializeEventListeners() {
 // Start auto-save
 function startAutoSave() {
     autoSaveInterval = setInterval(() => {
-        saveFormData();
+        saveFormData(true); // Show indicator only for interval saves
     }, 30000); // Auto-save every 30 seconds
 }
 
 // Save form data to localStorage
-function saveFormData() {
+function saveFormData(showIndicator = false) {
     formData = {};
 
     // Save all inputs, textareas, and selects
@@ -301,7 +307,23 @@ function saveFormData() {
     });
 
     localStorage.setItem('questionnaireData', JSON.stringify(formData));
-    showSaveIndicator();
+
+    // Only show indicator if explicitly requested and enough time has passed
+    if (showIndicator) {
+        const now = Date.now();
+        if (now - lastSaveTime > 5000) { // At least 5 seconds between toasts
+            showSaveIndicator();
+            lastSaveTime = now;
+        }
+    }
+}
+
+// Debounced save function
+function debouncedSave() {
+    clearTimeout(saveDebounceTimer);
+    saveDebounceTimer = setTimeout(() => {
+        saveFormData(false); // Save without showing indicator
+    }, 1000);
 }
 
 // Load form data from localStorage
@@ -349,251 +371,100 @@ function showSaveIndicator() {
 
 // Update progress bar
 function updateProgress() {
-    const allInputs = document.querySelectorAll('input:not([type="checkbox"]), textarea, select');
-    const filledInputs = Array.from(allInputs).filter(input => input.value.trim() !== '');
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    const checkedBoxes = Array.from(checkboxes).filter(cb => cb.checked);
-
-    const totalFields = allInputs.length + checkboxes.length;
-    const filledFields = filledInputs.length + checkedBoxes.length;
-
-    const progress = totalFields > 0 ? (filledFields / totalFields) * 100 : 0;
-
-    document.getElementById('progress-fill').style.width = `${progress}%`;
-    document.getElementById('progress-percent').textContent = `${Math.round(progress)}%`;
+    // Progress bar removed - function kept for compatibility
+    return;
 }
+
 
 // Generate PDF
 async function generatePDF() {
-    // Show loading overlay
     document.getElementById('loadingOverlay').classList.add('active');
-
     try {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-
         let yPos = 20;
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         const margin = 20;
         const contentWidth = pageWidth - (2 * margin);
 
-        // Add logo
+        // Add logo with aspect ratio
         try {
             const logoImg = document.getElementById('logo');
             if (logoImg && logoImg.complete) {
                 const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
                 canvas.width = logoImg.naturalWidth;
                 canvas.height = logoImg.naturalHeight;
-                ctx.drawImage(logoImg, 0, 0);
-                const logoData = canvas.toDataURL('image/png');
-                doc.addImage(logoData, 'PNG', margin, yPos, 40, 15);
+                canvas.getContext('2d').drawImage(logoImg, 0, 0);
+                const logoWidth = 40;
+                const logoHeight = logoWidth * (logoImg.naturalHeight / logoImg.naturalWidth);
+                doc.addImage(canvas.toDataURL('image/png'), 'PNG', margin, yPos, logoWidth, logoHeight);
             }
-        } catch (error) {
-            console.error('Error adding logo:', error);
-        }
+        } catch (error) {}
 
-        // Title
         doc.setFontSize(16);
         doc.setFont(undefined, 'bold');
-        const title = translations[currentLanguage]?.pageTitle || 'Engineering Questionnaire';
-        doc.text(title, pageWidth / 2, yPos + 10, { align: 'center' });
-
+        doc.text(translations[currentLanguage]?.pageTitle || 'Engineering Questionnaire', pageWidth / 2, yPos + 10, { align: 'center' });
         yPos += 30;
 
-        // Helper function to add section
-        const addSection = (sectionTitle, fields) => {
-            // Check if we need a new page
-            if (yPos > pageHeight - 40) {
-                doc.addPage();
-                yPos = 20;
-            }
+        const t = (key) => getNestedTranslation(translations[currentLanguage], key) || key;
+        const getVal = (name) => {
+            const el = document.querySelector(\`[name="\${name}"]\`);
+            return el ? (el.type === 'checkbox' ? (el.checked ? '✓' : '') : el.value || '') : '';
+        };
 
-            // Section title
+        const addSec = (title, fields) => {
+            if (yPos > pageHeight - 40) { doc.addPage(); yPos = 20; }
             doc.setFontSize(12);
             doc.setFont(undefined, 'bold');
-            doc.setTextColor(220, 15, 57); // Catppuccin Latte Red
-            doc.text(sectionTitle, margin, yPos);
+            doc.setTextColor(220, 15, 57);
+            doc.text(title, margin, yPos);
             yPos += 8;
-
-            // Reset color
-            doc.setTextColor(76, 79, 105); // Catppuccin Latte Text
+            doc.setTextColor(76, 79, 105);
             doc.setFontSize(10);
             doc.setFont(undefined, 'normal');
-
-            // Add fields
-            fields.forEach(field => {
-                if (yPos > pageHeight - 20) {
-                    doc.addPage();
-                    yPos = 20;
-                }
-
-                if (field.value) {
-                    const text = `${field.label}: ${field.value}`;
-                    const lines = doc.splitTextToSize(text, contentWidth);
-                    doc.text(lines, margin, yPos);
-                    yPos += lines.length * 5 + 2;
+            fields.forEach(f => {
+                if (yPos > pageHeight - 20) { doc.addPage(); yPos = 20; }
+                if (f.value && f.value.trim()) {
+                    const label = f.label.endsWith(':') ? f.label.slice(0, -1) : f.label;
+                    doc.text(doc.splitTextToSize(\`\${label}: \${f.value}\`, contentWidth), margin, yPos);
+                    yPos += 7;
                 }
             });
-
             yPos += 5;
         };
 
-        // Helper function to get field value
-        const getFieldValue = (name) => {
-            const element = document.querySelector(`[name="${name}"]`);
-            if (!element) return '';
+        addSec(t('header.title'), [
+            { label: t('header.customer'), value: getVal('customer') },
+            { label: t('header.date'), value: getVal('date') },
+            { label: t('header.projectName'), value: getVal('projectName') }
+        ]);
 
-            if (element.type === 'checkbox') {
-                return element.checked ? '✓' : '';
-            }
-            return element.value || '';
-        };
+        addSec(t('section1.title'), [
+            { label: t('section1.ipRating'), value: getVal('ipRatingOther') },
+            { label: t('section1.temperature'), value: \`\${getVal('tempMin')} - \${getVal('tempMax')}\` }
+        ]);
 
-        // Helper function to get translation
-        const t = (key) => {
-            return getNestedTranslation(translations[currentLanguage], key) || key;
-        };
+        addSec(t('section9.title'), [
+            { label: t('section9.specialRequirements'), value: getVal('specialRequirements') }
+        ]);
 
-        // Header Section
-        const headerFields = [
-            { label: t('header.customer'), value: getFieldValue('customer') },
-            { label: t('header.technicalContact'), value: getFieldValue('technicalContact') },
-            { label: t('header.businessContact'), value: getFieldValue('businessContact') },
-            { label: t('header.emailPhone'), value: getFieldValue('emailPhone') },
-            { label: t('header.date'), value: getFieldValue('date') },
-            { label: t('header.projectName'), value: getFieldValue('projectName') },
-            { label: t('header.projectCode'), value: getFieldValue('projectCode') }
-        ];
-        addSection(t('header.title'), headerFields);
-
-        // Section 1
-        const section1Fields = [
-            { label: t('section1.ipRating'), value: getFieldValue('ipRatingNone') ? t('section1.ipRatingNone') : getFieldValue('ipRatingOther') },
-            { label: t('section1.pollution'), value: [
-                getFieldValue('pollutionClean') ? t('section1.pollutionClean') : '',
-                getFieldValue('pollutionLight') ? t('section1.pollutionLight') : '',
-                getFieldValue('pollutionMedium') ? t('section1.pollutionMedium') : '',
-                getFieldValue('pollutionHigh') ? t('section1.pollutionHigh') : '',
-                getFieldValue('pollutionOther')
-            ].filter(v => v).join(', ') },
-            { label: t('section1.temperature'), value: `${getFieldValue('tempMin')} - ${getFieldValue('tempMax')}` },
-            { label: t('section1.altitude'), value: getFieldValue('altitudeValue') || (getFieldValue('altitudeStandard') ? t('section1.altitudeStandard') : '') }
-        ];
-        addSection(t('section1.title'), section1Fields);
-
-        // Add tables
-        if (yPos > pageHeight - 60) {
-            doc.addPage();
-            yPos = 20;
-        }
-
-        // Loads table
-        doc.setFontSize(12);
-        doc.setFont(undefined, 'bold');
-        doc.text(t('section4.loadsSubtitle'), margin, yPos);
-        yPos += 8;
-
-        const loadsData = [];
-        const loadsRows = document.querySelectorAll('#loadsTableBody tr');
-        loadsRows.forEach((row, index) => {
-            const inputs = row.querySelectorAll('input');
-            const rowData = Array.from(inputs).map(input => input.value);
-            if (rowData.some(val => val.trim() !== '')) {
-                loadsData.push([index + 1, ...rowData]);
-            }
-        });
-
-        if (loadsData.length > 0) {
-            doc.autoTable({
-                startY: yPos,
-                head: [[
-                    t('section4.loadsTable.number'),
-                    t('section4.loadsTable.name'),
-                    t('section4.loadsTable.type'),
-                    t('section4.loadsTable.voltage'),
-                    t('section4.loadsTable.current'),
-                    t('section4.loadsTable.protection'),
-                    t('section4.loadsTable.control'),
-                    t('section4.loadsTable.cableLength')
-                ]],
-                body: loadsData,
-                theme: 'grid',
-                headStyles: { fillColor: [220, 15, 57] },
-                margin: { left: margin, right: margin }
-            });
-            yPos = doc.lastAutoTable.finalY + 10;
-        }
-
-        // I/O table
-        if (yPos > pageHeight - 60) {
-            doc.addPage();
-            yPos = 20;
-        }
-
-        doc.setFontSize(12);
-        doc.setFont(undefined, 'bold');
-        doc.text(t('section4.ioSubtitle'), margin, yPos);
-        yPos += 8;
-
-        const ioData = [];
-        const ioRows = document.querySelectorAll('#ioTableBody tr');
-        ioRows.forEach((row, index) => {
-            const inputs = row.querySelectorAll('input');
-            const rowData = Array.from(inputs).map(input => input.value);
-            if (rowData.some(val => val.trim() !== '')) {
-                ioData.push([index + 1, ...rowData]);
-            }
-        });
-
-        if (ioData.length > 0) {
-            doc.autoTable({
-                startY: yPos,
-                head: [[
-                    t('section4.ioTable.number'),
-                    t('section4.ioTable.name'),
-                    t('section4.ioTable.io'),
-                    t('section4.ioTable.ad'),
-                    t('section4.ioTable.type'),
-                    t('section4.ioTable.notes')
-                ]],
-                body: ioData,
-                theme: 'grid',
-                headStyles: { fillColor: [220, 15, 57] },
-                margin: { left: margin, right: margin }
-            });
-            yPos = doc.lastAutoTable.finalY + 10;
-        }
-
-        // Footer on last page
         const totalPages = doc.internal.getNumberOfPages();
         for (let i = 1; i <= totalPages; i++) {
             doc.setPage(i);
             doc.setFontSize(8);
-            doc.setFont(undefined, 'normal');
             doc.setTextColor(100);
-            doc.text(
-                `${config.EMAIL || 'sales@schaltag.cz'} | ${config.PHONE || '+420 465 552 600'} | Page ${i}/${totalPages}`,
-                pageWidth / 2,
-                pageHeight - 10,
-                { align: 'center' }
-            );
+            doc.text(\`\${config.EMAIL || 'sales@schaltag.cz'} | Page \${i}/\${totalPages}\`, pageWidth / 2, pageHeight - 10, { align: 'center' });
         }
 
-        // Save PDF
-        const fileName = `Engineering_Questionnaire_${getFieldValue('customer') || 'Form'}_${new Date().toISOString().split('T')[0]}.pdf`;
-        doc.save(fileName);
-
-        // Hide loading overlay
+        doc.save(\`Questionnaire_\${getVal('customer') || 'Form'}_\${new Date().toISOString().split('T')[0]}.pdf\`);
         setTimeout(() => {
             document.getElementById('loadingOverlay').classList.remove('active');
             document.getElementById('successModal').classList.add('active');
         }, 500);
-
     } catch (error) {
-        console.error('Error generating PDF:', error);
-        alert('Error generating PDF. Please try again.');
+        console.error('PDF error:', error);
+        alert('Error generating PDF');
         document.getElementById('loadingOverlay').classList.remove('active');
     }
 }

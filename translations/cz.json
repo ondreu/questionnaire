@@ -89,7 +89,7 @@
     "connectionMethodNone": "Bez požadavku",
     "connectionMethodOther": "Jiné:",
     "cableSupplied": "Kabel bude součástí dodávky:",
-    "cableSuppliedYes": "Ano - poslední 2 otázky můžete vynechat",
+    "cableSuppliedYes": "Ano",
     "cableSuppliedNo": "Ne",
     "cableMaterial": "Materiál kabelu:",
     "cableMaterialCu": "Cu (měď)",
@@ -126,7 +126,7 @@
     "accessibilityLimited": "Omezený prostor (rozměry: ___)",
     "subtitle3": "3.3 Připojení k rozvaděči",
     "cableEntries": "Kabelové vstupy/výstupy:",
-    "cableEntriesBottom": "Zdola (kabelový kanál)",
+    "cableEntriesBottom": "Zdola",
     "cableEntriesTop": "Shora",
     "cableEntriesSide": "Ze strany",
     "cableEntriesCombination": "Kombinace",
@@ -285,10 +285,6 @@
   "section9": {
     "title": "9. POZNÁMKY A PŘÍLOHY",
     "specialRequirements": "Speciální požadavky:",
-    "attachments": "Přiložené dokumenty:",
-    "attachmentSchema": "Stávající schéma:",
-    "attachmentPhotos": "Fotografie:",
-    "attachmentDatasheets": "Technické listy:",
-    "attachmentOther": "Jiné:"
+    "attachmentsNote": "Prosím existující dokumenty jako: stávající schéma, rozpis kabelů a vstupů/výstupů, fotografie, 3D modely atd. přiložte emailem, sdílejte pomocí vlastního cloudového uložiště, či požádejte Schaltag o odkaz na cloudové uložiště pro nahrání dokumentů."
   }
 }

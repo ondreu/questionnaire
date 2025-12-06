@@ -89,7 +89,7 @@
     "connectionMethodNone": "No requirement",
     "connectionMethodOther": "Other:",
     "cableSupplied": "Cable will be part of delivery:",
-    "cableSuppliedYes": "Yes - you can skip the last 2 questions",
+    "cableSuppliedYes": "Yes",
     "cableSuppliedNo": "No",
     "cableMaterial": "Cable material:",
     "cableMaterialCu": "Cu (copper)",
@@ -126,7 +126,7 @@
     "accessibilityLimited": "Limited space (dimensions: ___)",
     "subtitle3": "3.3 Cabinet Connections",
     "cableEntries": "Cable entries/exits:",
-    "cableEntriesBottom": "From bottom (cable duct)",
+    "cableEntriesBottom": "From bottom",
     "cableEntriesTop": "From top",
     "cableEntriesSide": "From side",
     "cableEntriesCombination": "Combination",
@@ -285,10 +285,6 @@
   "section9": {
     "title": "9. NOTES AND ATTACHMENTS",
     "specialRequirements": "Special requirements:",
-    "attachments": "Attached documents:",
-    "attachmentSchema": "Existing schematic:",
-    "attachmentPhotos": "Photos:",
-    "attachmentDatasheets": "Technical datasheets:",
-    "attachmentOther": "Other:"
+    "attachmentsNote": "Please attach existing documents such as: schematics, cable schedules, I/O lists, photos, 3D models, etc. via email, share using your own cloud storage, or request a Schaltag cloud storage link for uploading documents."
   }
 }

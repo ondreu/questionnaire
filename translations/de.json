@@ -89,7 +89,7 @@
     "connectionMethodNone": "Keine Anforderung",
     "connectionMethodOther": "Andere:",
     "cableSupplied": "Kabel ist Teil der Lieferung:",
-    "cableSuppliedYes": "Ja - Sie können die letzten 2 Fragen überspringen",
+    "cableSuppliedYes": "Ja",
     "cableSuppliedNo": "Nein",
     "cableMaterial": "Kabelmaterial:",
     "cableMaterialCu": "Cu (Kupfer)",
@@ -126,7 +126,7 @@
     "accessibilityLimited": "Begrenzter Raum (Abmessungen: ___)",
     "subtitle3": "3.3 Schaltschrankanschlüsse",
     "cableEntries": "Kabeleinführungen/-ausführungen:",
-    "cableEntriesBottom": "Von unten (Kabelkanal)",
+    "cableEntriesBottom": "Von unten",
     "cableEntriesTop": "Von oben",
     "cableEntriesSide": "Von der Seite",
     "cableEntriesCombination": "Kombination",
@@ -285,10 +285,6 @@
   "section9": {
     "title": "9. BEMERKUNGEN UND ANLAGEN",
     "specialRequirements": "Besondere Anforderungen:",
-    "attachments": "Beigefügte Dokumente:",
-    "attachmentSchema": "Vorhandenes Schema:",
-    "attachmentPhotos": "Fotos:",
-    "attachmentDatasheets": "Technische Datenblätter:",
-    "attachmentOther": "Andere:"
+    "attachmentsNote": "Bitte fügen Sie vorhandene Dokumente wie: Schaltpläne, Kabellisten, E/A-Listen, Fotos, 3D-Modelle usw. per E-Mail bei, teilen Sie sie über Ihren eigenen Cloud-Speicher oder fordern Sie einen Schaltag Cloud-Speicher-Link zum Hochladen von Dokumenten an."
   }
 }

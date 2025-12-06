@@ -27,13 +27,6 @@
                 </button>
             </div>
         </div>
-        <div class="progress-container">
-            <div class="progress-label" data-i18n="progressLabel">Progress:</div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
-            <div class="progress-percent" id="progress-percent">0%</div>
-        </div>
     </header>
 
     <!-- Main Form -->
@@ -578,13 +571,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label data-i18n="section9.attachments">Attached documents:</label>
-                        <div class="checkbox-group">
-                            <label><span data-i18n="section9.attachmentSchema">Existing schematic:</span> <input type="text" name="attachmentSchema" data-section="section9"></label>
-                            <label><span data-i18n="section9.attachmentPhotos">Photos:</span> <input type="text" name="attachmentPhotos" data-section="section9"></label>
-                            <label><span data-i18n="section9.attachmentDatasheets">Technical datasheets:</span> <input type="text" name="attachmentDatasheets" data-section="section9"></label>
-                            <label><span data-i18n="section9.attachmentOther">Other:</span> <input type="text" name="attachmentOther" data-section="section9"></label>
-                        </div>
+                        <p class="info-note" data-i18n="section9.attachmentsNote">Please attach existing documents such as: schematics, cable schedules, I/O lists, photos, 3D models, etc. via email, share using your own cloud storage, or request a Schaltag cloud storage link for uploading documents.</p>
                     </div>
                 </section>
 
@@ -602,7 +589,7 @@
             <div class="footer-section">
                 <h3 data-i18n="instructions">Instructions:</h3>
                 <p data-i18n="instructionsText">Please send the completed questionnaire to:</p>
-                <p id="footer-email">📧 sales@schaltag.cz</p>
+                <p>📧 <a href="mailto:sales@schaltag.cz" id="footer-email">sales@schaltag.cz</a></p>
             </div>
             <div class="footer-section">
                 <h3 data-i18n="contact">Contact:</h3>
@@ -617,7 +604,7 @@
         <div class="modal-content">
             <h2 data-i18n="successTitle">✅ Questionnaire generated successfully!</h2>
             <p data-i18n="successMessage">Please send the completed questionnaire to:</p>
-            <p><strong id="modal-email">📧 sales@schaltag.cz</strong></p>
+            <p><strong>📧 <a href="mailto:sales@schaltag.cz" id="modal-email">sales@schaltag.cz</a></strong></p>
             <br>
             <p data-i18n="contactUs">Contact us with any questions:</p>
             <p id="modal-phone">📞 +420 465 552 600</p>
