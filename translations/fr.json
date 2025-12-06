@@ -2,6 +2,8 @@
   "pageTitle": "Questionnaire Technique",
   "downloadPdf": "Télécharger PDF",
   "sendEmail": "Envoyer par e-mail",
+  "clearData": "Effacer toutes les données",
+  "confirmClear": "Voulez-vous vraiment supprimer toutes les données du formulaire? Cette action est irréversible.",
   "emailSubject": "Questionnaire Technique",
   "emailBody": "Bonjour,\n\nVeuillez trouver ci-joint le questionnaire technique rempli.\n\nProjet: {projectName}\nClient: {customer}\nDate: {date}\n\nCordialement",
   "instructions": "Instructions:",

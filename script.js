@@ -257,8 +257,11 @@ function initializeEventListeners() {
     // Download PDF button
     document.getElementById('downloadPDF').addEventListener('click', generatePDF);
 
-    // Send Email button
-    document.getElementById('sendEmail').addEventListener('click', sendEmail);
+    // Send Email button in modal
+    document.getElementById('sendEmailModal').addEventListener('click', sendEmail);
+
+    // Clear data button
+    document.getElementById('clearData').addEventListener('click', clearAllData);
 
     // Close modal
     document.getElementById('closeModal').addEventListener('click', () => {
@@ -697,4 +700,39 @@ function sendEmail() {
 
     // Open email client
     window.location.href = mailtoLink;
+}
+
+// Clear all form data
+function clearAllData() {
+    const t = translations[currentLanguage];
+    const confirmMessage = t.confirmClear || 'Are you sure you want to delete all form data? This action cannot be undone.';
+
+    if (confirm(confirmMessage)) {
+        // Clear all inputs
+        document.querySelectorAll('input, textarea, select').forEach(element => {
+            if (element.type === 'checkbox') {
+                element.checked = false;
+            } else if (element.type === 'date') {
+                element.value = new Date().toISOString().split('T')[0];
+            } else {
+                element.value = '';
+            }
+        });
+
+        // Clear localStorage
+        localStorage.removeItem('questionnaireData');
+        formData = {};
+
+        // Hide conditional fields
+        const cableMaterialGroup = document.getElementById('cableMaterialGroup');
+        const cableSectionGroup = document.getElementById('cableSectionGroup');
+        if (cableMaterialGroup) cableMaterialGroup.classList.remove('visible');
+        if (cableSectionGroup) cableSectionGroup.classList.remove('visible');
+
+        // Update progress
+        updateProgress();
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 }

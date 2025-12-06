@@ -2,6 +2,8 @@
   "pageTitle": "Engineering Questionnaire",
   "downloadPdf": "Download PDF",
   "sendEmail": "Send via Email",
+  "clearData": "Clear All Data",
+  "confirmClear": "Are you sure you want to delete all form data? This action cannot be undone.",
   "emailSubject": "Engineering Questionnaire",
   "emailBody": "Dear Schaltag team,\n\nPlease find attached the completed engineering questionnaire.\n\nProject: {projectName}\nCustomer: {customer}\nDate: {date}\n\nBest regards",
   "instructions": "Instructions:",

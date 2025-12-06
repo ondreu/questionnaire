@@ -474,6 +474,28 @@ h1 {
     transform: translateY(0);
 }
 
+.btn-danger {
+    padding: 0.75rem 2rem;
+    background-color: transparent;
+    color: var(--red);
+    border: 2px solid var(--red);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: var(--red);
+    color: var(--base);
+    transform: translateY(-2px);
+}
+
+.btn-danger:active {
+    transform: translateY(0);
+}
+
 /* Footer */
 footer {
     background-color: var(--mantle);
@@ -488,6 +510,14 @@ footer {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
+}
+
+.footer-actions {
+    max-width: 1200px;
+    margin: 2rem auto 0;
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid var(--surface0);
 }
 
 .footer-section h3 {
@@ -526,6 +556,14 @@ footer {
     text-align: center;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     animation: modalSlideIn 0.3s ease;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
 }
 
 @keyframes modalSlideIn {

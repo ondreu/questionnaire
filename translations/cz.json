@@ -2,6 +2,8 @@
   "pageTitle": "Engineering Dotazník",
   "downloadPdf": "Stáhnout PDF",
   "sendEmail": "Odeslat emailem",
+  "clearData": "Vymazat všechna data",
+  "confirmClear": "Opravdu chcete smazat všechna data formuláře? Tuto akci nelze vrátit zpět.",
   "emailSubject": "Engineering dotazník",
   "emailBody": "Dobrý den,\n\npřiložený dokument obsahuje vyplněný engineering dotazník.\n\nProjekt: {projectName}\nZákazník: {customer}\nDatum: {date}\n\nS pozdravem",
   "instructions": "Instrukce:",

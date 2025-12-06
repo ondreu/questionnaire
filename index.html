@@ -608,7 +608,6 @@
                 <!-- Download Button -->
                 <div class="download-section">
                     <button type="button" id="downloadPDF" class="btn-primary" data-i18n="downloadPdf">Download PDF</button>
-                    <button type="button" id="sendEmail" class="btn-secondary" data-i18n="sendEmail">Send via Email</button>
                 </div>
             </form>
         </div>
@@ -628,6 +627,9 @@
                 <p id="footer-address">📍 Moravská 1571, CZ - 562 01, Ústí nad Orlicí</p>
             </div>
         </div>
+        <div class="footer-actions">
+            <button id="clearData" class="btn-danger" data-i18n="clearData">Clear All Data</button>
+        </div>
     </footer>
 
     <!-- Success Modal -->
@@ -641,7 +643,10 @@
             <p id="modal-phone">📞 +420 465 552 600</p>
             <p id="modal-address">📍 Moravská 1571, CZ - 562 01, Ústí nad Orlicí</p>
             <br>
-            <button id="closeModal" class="btn-primary" data-i18n="close">Close</button>
+            <div class="modal-buttons">
+                <button id="sendEmailModal" class="btn-primary" data-i18n="sendEmail">Send via Email</button>
+                <button id="closeModal" class="btn-secondary" data-i18n="close">Close</button>
+            </div>
         </div>
     </div>
 
